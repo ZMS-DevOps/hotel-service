@@ -1,0 +1,24 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: hotel
+spec:	
+  selector:
+    matchLabels:
+       app: hotel
+  rules:
+    - to:
+        - operation:
+            methods: [ "GET" ]
+            paths: [ "/hotel/health" ]
+    - to:
+        - operation:
+            methods: [ "GET", "PUT", "POST", "DELETE" ]
+            paths: [ "/hotel/accommodation*", "/hotel/accommodation/**" ]
+      from:
+        - source:
+              requestPrincipals: [ "*" ]
+      when:
+        - key: request.auth.claims[realm_access][roles]
+          values: [ "admin" ]
+

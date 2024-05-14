@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel
+#  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel
+  template:
+    metadata:
+      labels:
+        app: hotel
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: booking
+          image: devopszms2024/zms-devops-hotel-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: mongo-secret
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-configmap
+                  key: db-host
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-configmap
+                  key: db-port
+            - name: SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: hotel-configmap
+                  key: SERVICE_PORT
+            - name: GRPC_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: hotel-configmap
+                  key: GRPC_PORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel
+#  namespace: backend
+spec:
+  selector:
+    app: hotel
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 8080
+    - protocol: TCP
+      name: grpc
+      port: 8001
+      targetPort: 8001

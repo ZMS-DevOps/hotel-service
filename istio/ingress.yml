@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: hotel-virtual-service
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - hotel-gateway
+  http:
+    - match:
+        - uri:
+            prefix: "/hotel"
+      route:
+        - destination:
+            host: hotel.default.svc.cluster.local
+            port:
+              number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: hotel-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: hotel
+        protocol: HTTP
+      hosts:
+        - "*"
