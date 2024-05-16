@@ -20,6 +20,7 @@ var accommodations = []*domain.Accommodation{
 			Price: 500.00,
 			Type:  domain.PerApartmentUnit,
 		},
+		SpecialPrice: []domain.SpecialPrice{{}},
 	},
 	{
 		Id:       getObjectId("6643bdc7240f80f13b5d18d7"),

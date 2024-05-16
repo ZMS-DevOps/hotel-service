@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"fmt"
 	"github.com/mmmajder/zms-devops-hotel-service/domain"
 )
 
@@ -28,4 +29,17 @@ func mapDefaultPrice(defaultPrice *DefaultPriceDto) domain.DefaultPrice {
 		Price: defaultPrice.Price,
 		Type:  domain.PerApartmentUnit, // todo fix
 	}
+}
+
+func MapPricingType(typeOfPayment *string) (*domain.PricingType, error) {
+	var pricingType domain.PricingType
+	switch *typeOfPayment {
+	case "PerApartmentUnit":
+		pricingType = domain.PerApartmentUnit
+	case "PerGuest":
+		pricingType = domain.PerGuest
+	default:
+		return nil, fmt.Errorf("invalid pricing type: %s", *typeOfPayment)
+	}
+	return &pricingType, nil
 }

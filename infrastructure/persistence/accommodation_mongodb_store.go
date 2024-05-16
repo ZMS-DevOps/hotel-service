@@ -2,10 +2,13 @@ package persistence
 
 import (
 	"context"
+	"fmt"
 	"github.com/mmmajder/zms-devops-hotel-service/domain"
+	"github.com/mmmajder/zms-devops-hotel-service/infrastructure/dto"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"time"
 )
 
 const (
@@ -60,13 +63,6 @@ func (store *AccommodationMongoDBStore) Delete(id primitive.ObjectID) error {
 func (store *AccommodationMongoDBStore) Update(id primitive.ObjectID, accommodation *domain.Accommodation) error {
 	filter := bson.M{"_id": id}
 
-	//updateFields := bson.D{}
-	//updateFields = append(updateFields, bson.E{"name", accommodation.Name})
-	//updateFields = append(updateFields, bson.E{"location", accommodation.Location})
-	//updateFields = append(updateFields, bson.E{"benefits", accommodation.Benefits})
-	//updateFields = append(updateFields, bson.E{"photos", accommodation.Photos})
-	//updateFields = append(updateFields, bson.E{"guest_number", accommodation.GuestNumber})
-	//updateFields = append(updateFields, bson.E{"default_price", accommodation.DefaultPrice})
 	updateFields := bson.D{
 		{"name", accommodation.Name},
 		{"location", accommodation.Location},
@@ -111,4 +107,74 @@ func decode(cursor *mongo.Cursor) (accommodations []*domain.Accommodation, err e
 	}
 	err = cursor.Err()
 	return
+}
+
+func (store *AccommodationMongoDBStore) UpdateDefaultPrice(id primitive.ObjectID, price *float64) error {
+	if price == nil {
+		return nil
+	}
+
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{"default_price.price": *price}}
+
+	_, err := store.accommodations.UpdateOne(context.TODO(), filter, update)
+	return err
+}
+
+func (store *AccommodationMongoDBStore) UpdateSpecialPrice(id primitive.ObjectID, price *float64, Start *time.Time, End *time.Time) error {
+	if price == nil || Start == nil || End == nil {
+		return nil
+	}
+
+	specialPrice := domain.SpecialPrice{
+		Price: *price,
+		DateRange: domain.DateRange{
+			Start: *Start,
+			End:   *End,
+		},
+	}
+
+	filter := bson.M{"_id": id}
+	update := bson.M{}
+
+	currentSpecialPrices, err := store.getSpecialPrices(id)
+	if err != nil {
+		return err
+	}
+
+	// Check if currentSpecialPrices is nil or empty
+	if currentSpecialPrices == nil || len(currentSpecialPrices) == 0 {
+		update = bson.M{"$set": bson.M{"special_price": []domain.SpecialPrice{specialPrice}}}
+	} else {
+		update = bson.M{"$push": bson.M{"special_price": specialPrice}}
+	}
+
+	_, err = store.accommodations.UpdateOne(context.TODO(), filter, update)
+	return err
+}
+
+func (store *AccommodationMongoDBStore) getSpecialPrices(id primitive.ObjectID) ([]domain.SpecialPrice, error) {
+	var accommodation domain.Accommodation
+	filter := bson.M{"_id": id}
+	err := store.accommodations.FindOne(context.TODO(), filter).Decode(&accommodation)
+	if err != nil {
+		return nil, err
+	}
+	return accommodation.SpecialPrice, nil
+}
+
+func (store *AccommodationMongoDBStore) UpdateTypeOfPayment(id primitive.ObjectID, typeOfPayment *string) error {
+	if typeOfPayment == nil {
+		return fmt.Errorf("payment type is nil but should not be")
+	}
+
+	var pricingType, err = dto.MapPricingType(typeOfPayment)
+	if err != nil {
+		return err
+	}
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{"default_price.type": pricingType}}
+
+	_, err = store.accommodations.UpdateOne(context.TODO(), filter, update)
+	return err
 }

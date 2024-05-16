@@ -35,11 +35,12 @@ func NewAccommodationHandler(service *application.AccommodationService) *Accommo
 }
 
 func (handler *AccommodationHandler) Init(router *mux.Router) {
-	router.HandleFunc("/hotel/accommodation", handler.GetAll).Methods("GET")
+	router.HandleFunc(`/hotel/accommodation`, handler.GetAll).Methods("GET")
 	router.HandleFunc("/hotel/accommodation/{id}", handler.GetById).Methods("GET")
 	router.HandleFunc("/hotel/accommodation", handler.Add).Methods("POST")
 	router.HandleFunc("/hotel/accommodation/{id}", handler.Update).Methods("PUT")
 	router.HandleFunc("/hotel/accommodation/{id}", handler.Delete).Methods("DELETE")
+	router.HandleFunc("/hotel/accommodation/price/{id}", handler.UpdatePrice).Methods("PUT")
 	router.HandleFunc("/hotel/health", handler.GetHealthCheck).Methods("GET")
 }
 
@@ -66,7 +67,34 @@ func (handler *AccommodationHandler) Update(w http.ResponseWriter, r *http.Reque
 	updatedAccommodation.Id = accommodationId
 
 	if err := handler.service.Update(accommodationId, updatedAccommodation); err != nil {
-		fmt.Println(err)
+		handleError(w, http.StatusInternalServerError, "Failed to update accommodation")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (handler *AccommodationHandler) UpdatePrice(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	accommodationId, err := primitive.ObjectIDFromHex(vars["id"])
+	if err != nil {
+		handleError(w, http.StatusBadRequest, "Invalid accommodation ID")
+		return
+	}
+
+	var updatePriceDto dto.UpdatePriceDto
+	if err := json.NewDecoder(r.Body).Decode(&updatePriceDto); err != nil {
+		handleError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+
+	// Validate update price dto
+	if err := dto.ValidateUpdatePriceDto(&updatePriceDto); err != nil {
+		handleError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err := handler.service.UpdatePrice(accommodationId, updatePriceDto); err != nil {
 		handleError(w, http.StatusInternalServerError, "Failed to update accommodation")
 		return
 	}

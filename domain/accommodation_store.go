@@ -2,6 +2,7 @@ package domain
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 type AccommodationStore interface {
@@ -11,4 +12,7 @@ type AccommodationStore interface {
 	DeleteAll()
 	Delete(id primitive.ObjectID) error
 	Update(id primitive.ObjectID, accommodation *Accommodation) error
+	UpdateDefaultPrice(id primitive.ObjectID, price *float64) error
+	UpdateSpecialPrice(id primitive.ObjectID, price *float64, Start *time.Time, End *time.Time) error
+	UpdateTypeOfPayment(id primitive.ObjectID, typeOfPayment *string) error
 }
