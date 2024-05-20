@@ -14,7 +14,7 @@ spec:
     - to:
         - operation:
             methods: [ "GET", "PUT", "POST", "DELETE" ]
-            paths: [ "/hotel/accommodation*", "/hotel/accommodation/**", "/hotel/price/*", "/hotel/price/**" ]
+            paths: [ "/hotel/accommodation*", "/hotel/accommodation/**", "/hotel/accommodation/price/*", "/hotel/accommodation/price/**" ]
       from:
         - source:
               requestPrincipals: [ "*" ]

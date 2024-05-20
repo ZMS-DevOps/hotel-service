@@ -1,18 +1,25 @@
 package application
 
 import (
-	"github.com/mmmajder/zms-devops-hotel-service/domain"
-	"github.com/mmmajder/zms-devops-hotel-service/infrastructure/dto"
+	"fmt"
+	booking "github.com/ZMS-DevOps/booking-service/proto"
+	"github.com/ZMS-DevOps/hotel-service/application/external"
+
+	"github.com/ZMS-DevOps/hotel-service/domain"
+	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type AccommodationService struct {
-	store domain.AccommodationStore
+	store         domain.AccommodationStore
+	bookingClient booking.BookingServiceClient
 }
 
-func NewAccommodationService(store domain.AccommodationStore) *AccommodationService {
+// func NewAccommodationService(store domain.AccommodationStore) *AccommodationService {
+func NewAccommodationService(store domain.AccommodationStore, bookingClient booking.BookingServiceClient) *AccommodationService {
 	return &AccommodationService{
-		store: store,
+		store:         store,
+		bookingClient: bookingClient,
 	}
 }
 
@@ -26,6 +33,14 @@ func (service *AccommodationService) GetAll() ([]*domain.Accommodation, error) {
 
 func (service *AccommodationService) Add(accommodation *domain.Accommodation) error {
 	err := service.store.Insert(accommodation)
+	if err != nil {
+		return err
+	}
+	// todo create booking empty unavailability object
+	fmt.Println(accommodation.Id)
+	fmt.Println("Stigao sammmmmmmm")
+	_, err = external.CreateBookingUnavailability(service.bookingClient, accommodation.Id)
+	fmt.Println(err)
 	if err != nil {
 		return err
 	}
@@ -68,13 +83,26 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 			return err
 		}
 	} else if updatePriceDto.Price != nil {
-		// todo check if there are no reservations if that date range
-		if err := service.store.UpdateSpecialPrice(id, updatePriceDto.Price, &updatePriceDto.DateRange.Start, &updatePriceDto.DateRange.End); err != nil {
+		currentSpecialPrices, err := service.store.GetSpecialPrices(id)
+		if err != nil {
+			return err
+		}
+
+		newSpecialPrice := domain.SpecialPrice{
+			Price: *updatePriceDto.Price,
+			DateRange: domain.DateRange{
+				Start: updatePriceDto.DateRange.Start,
+				End:   updatePriceDto.DateRange.End,
+			},
+		}
+
+		newSpecialPrices := AddSpecialPrice(currentSpecialPrices, newSpecialPrice)
+
+		if err := service.store.UpdateSpecialPrice(id, newSpecialPrices); err != nil {
 			return err
 		}
 	}
 	if updatePriceDto.Type != nil {
-		// todo check if there are no reservations for accommodation at all
 		if err := service.store.UpdateTypeOfPayment(id, updatePriceDto.Type); err != nil {
 			return err
 		}

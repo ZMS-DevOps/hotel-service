@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/mmmajder/zms-devops-hotel-service/startup"
-	cfg "github.com/mmmajder/zms-devops-hotel-service/startup/config"
+	"github.com/ZMS-DevOps/hotel-service/startup"
+	cfg "github.com/ZMS-DevOps/hotel-service/startup/config"
 )
 
 func main() {

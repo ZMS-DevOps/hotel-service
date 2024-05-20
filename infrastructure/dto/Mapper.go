@@ -1,8 +1,7 @@
 package dto
 
 import (
-	"fmt"
-	"github.com/mmmajder/zms-devops-hotel-service/domain"
+	"github.com/ZMS-DevOps/hotel-service/domain"
 )
 
 func MapAccommodation(accommodation *AccommodationDto) *domain.Accommodation {
@@ -27,11 +26,11 @@ func mapGuestNumber(guestNumber *GuestNumberDto) domain.GuestNumber {
 func mapDefaultPrice(defaultPrice *DefaultPriceDto) domain.DefaultPrice {
 	return domain.DefaultPrice{
 		Price: defaultPrice.Price,
-		Type:  domain.PerApartmentUnit, // todo fix
+		Type:  *MapPricingType(&defaultPrice.Type),
 	}
 }
 
-func MapPricingType(typeOfPayment *string) (*domain.PricingType, error) {
+func MapPricingType(typeOfPayment *string) *domain.PricingType {
 	var pricingType domain.PricingType
 	switch *typeOfPayment {
 	case "PerApartmentUnit":
@@ -39,7 +38,7 @@ func MapPricingType(typeOfPayment *string) (*domain.PricingType, error) {
 	case "PerGuest":
 		pricingType = domain.PerGuest
 	default:
-		return nil, fmt.Errorf("invalid pricing type: %s", *typeOfPayment)
+		return nil
 	}
-	return &pricingType, nil
+	return &pricingType
 }

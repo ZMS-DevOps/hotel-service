@@ -3,10 +3,10 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ZMS-DevOps/hotel-service/application"
+	"github.com/ZMS-DevOps/hotel-service/domain"
+	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
 	"github.com/gorilla/mux"
-	"github.com/mmmajder/zms-devops-hotel-service/application"
-	"github.com/mmmajder/zms-devops-hotel-service/domain"
-	"github.com/mmmajder/zms-devops-hotel-service/infrastructure/dto"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )

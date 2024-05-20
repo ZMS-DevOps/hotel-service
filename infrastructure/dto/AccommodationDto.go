@@ -1,8 +1,8 @@
 package dto
 
 import (
+	"github.com/ZMS-DevOps/hotel-service/domain"
 	"github.com/go-playground/validator/v10"
-	"github.com/mmmajder/zms-devops-hotel-service/domain"
 )
 
 type AccommodationDto struct {
@@ -12,8 +12,6 @@ type AccommodationDto struct {
 	Photos       []string        `json:"photos"`
 	GuestNumber  GuestNumberDto  `json:"guest_number" validate:"required"`
 	DefaultPrice DefaultPriceDto `json:"default_price"  validate:"required"`
-	//Email     string `json:"email" validate:"required,email"`
-	//Age       int    `json:"age" validate:"gte=18,lte=120"`
 }
 
 type GuestNumberDto struct {
@@ -23,7 +21,7 @@ type GuestNumberDto struct {
 
 type DefaultPriceDto struct {
 	Price float64 `json:"price" validate:"min=0"`
-	Type  string  `json:"type"`
+	Type  string  `json:"type" validate:"omitempty,oneof=PerApartmentUnit PerGuest"`
 }
 
 func ValidateAccommodationDto(dto *AccommodationDto) error {

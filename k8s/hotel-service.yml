@@ -15,7 +15,7 @@ spec:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: booking
+        - name: hotel
           image: devopszms2024/zms-devops-hotel-service:latest
           imagePullPolicy: Always
           ports:
@@ -39,11 +39,16 @@ spec:
                 configMapKeyRef:
                   name: hotel-configmap
                   key: SERVICE_PORT
-            - name: GRPC_PORT
+            - name: BOOKING_HOST
               valueFrom:
                 configMapKeyRef:
                   name: hotel-configmap
-                  key: GRPC_PORT
+                  key: BOOKING_HOST
+            - name: BOOKING_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: hotel-configmap
+                  key: BOOKING_PORT
 ---
 apiVersion: v1
 kind: Service

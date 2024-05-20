@@ -1,7 +1,7 @@
 package startup
 
 import (
-	"github.com/mmmajder/zms-devops-hotel-service/domain"
+	"github.com/ZMS-DevOps/hotel-service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
