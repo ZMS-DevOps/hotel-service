@@ -63,13 +63,18 @@ func mapSearchSpecialPrice(price []domain.SpecialPrice) []*search.SpecialPrice {
 	var result []*search.SpecialPrice
 
 	for _, p := range price {
-		sp := &search.SpecialPrice{
-			Price:     p.Price,
-			StartDate: p.DateRange.Start.Format(time.RFC3339),
-			EndDate:   p.DateRange.End.Format(time.RFC3339),
-		}
-		result = append(result, sp)
+		result = addSpecialPrice(p, result)
 	}
 
+	return result
+}
+
+func addSpecialPrice(p domain.SpecialPrice, result []*search.SpecialPrice) []*search.SpecialPrice {
+	sp := &search.SpecialPrice{
+		Price:     p.Price,
+		StartDate: p.DateRange.Start.Format(time.RFC3339),
+		EndDate:   p.DateRange.End.Format(time.RFC3339),
+	}
+	result = append(result, sp)
 	return result
 }

@@ -17,8 +17,7 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Port: os.Getenv("SERVICE_PORT"),
-		//GrpcPort:        os.Getenv("GRPC_PORT"),
+		Port:            os.Getenv("SERVICE_PORT"),
 		HotelDBHost:     os.Getenv("DB_HOST"),
 		HotelDBPort:     os.Getenv("DB_PORT"),
 		HotelDBUsername: os.Getenv("MONGO_INITDB_ROOT_USERNAME"),

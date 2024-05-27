@@ -19,15 +19,12 @@ type DateRangeDTO struct {
 func ValidateUpdatePriceDto(dto *UpdatePriceDto) error {
 	validate := validator.New()
 
-	// Register custom validators
 	validate.RegisterValidation("validateDateRange", validateDateRange)
 
-	// Validate UpdatePriceDto
 	if err := validate.Struct(dto); err != nil {
 		return err
 	}
 
-	// Validate DateRangeDTO if present
 	if dto.DateRange != nil {
 		if err := validate.Struct(dto.DateRange); err != nil {
 			return err
@@ -37,7 +34,6 @@ func ValidateUpdatePriceDto(dto *UpdatePriceDto) error {
 	return nil
 }
 
-// Define a custom validator for DateRangeDTO
 func validateDateRange(fl validator.FieldLevel) bool {
 	start, ok := fl.Parent().FieldByName("Start").Interface().(time.Time)
 	if !ok {

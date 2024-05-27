@@ -7,7 +7,6 @@ import (
 	search "github.com/ZMS-DevOps/search-service/proto"
 	"github.com/gorilla/mux"
 
-	//"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/ZMS-DevOps/hotel-service/application"
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/api"
@@ -62,10 +61,7 @@ func (server *Server) initAccommodationStore(client *mongo.Client) domain.Accomm
 	store := persistence.NewAccommodationMongoDBStore(client)
 	store.DeleteAll()
 	for _, accommodation := range accommodations {
-		err := store.InsertWithId(accommodation)
-		if err != nil {
-			log.Fatal(err)
-		}
+		_ = store.InsertWithId(accommodation)
 	}
 	return store
 }
