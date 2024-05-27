@@ -65,11 +65,10 @@ jobs:
         with:
           projectBaseDir: hotel-service
           args: >
-            -Dsonar.organization=zms-devops
-            -Dsonar.projectKey=zms-devops_hotel-service
+            -sonar.projectKey=ZMS-DevOps_hotel-service
+            -sonar.organization=zms-devops
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.sources=.
-            -Dsonar.test.exclusions=**/tests/**
             -Dsonar.verbose=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
