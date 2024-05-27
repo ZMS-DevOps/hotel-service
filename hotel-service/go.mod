@@ -1,6 +1,6 @@
 module github.com/ZMS-DevOps/hotel-service
 
-go 1.17
+go 1.22
 
 //replace github.com/ZMS-DevOps/search-service => ../../search-service/search-service
 
