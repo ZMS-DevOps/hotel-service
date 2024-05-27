@@ -29,12 +29,12 @@ const (
 )
 
 type DefaultPrice struct {
-	Price float64     `bson:"price"`
+	Price float32     `bson:"price"`
 	Type  PricingType `bson:"type"`
 }
 
 type SpecialPrice struct {
-	Price     float64   `bson:"price"`
+	Price     float32   `bson:"price"`
 	DateRange DateRange `bson:"date_range"`
 }
 

@@ -12,7 +12,7 @@ type AccommodationStore interface {
 	DeleteAll()
 	Delete(id primitive.ObjectID) error
 	Update(id primitive.ObjectID, accommodation *Accommodation) error
-	UpdateDefaultPrice(id primitive.ObjectID, price *float64) error
+	UpdateDefaultPrice(id primitive.ObjectID, price *float32) error
 	UpdateSpecialPrice(id primitive.ObjectID, newSpecialPrices []SpecialPrice) error
 	UpdateTypeOfPayment(id primitive.ObjectID, typeOfPayment *string) error
 	GetSpecialPrices(id primitive.ObjectID) ([]SpecialPrice, error)

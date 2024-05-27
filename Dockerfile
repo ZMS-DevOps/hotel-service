@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy go mod and sum files
 COPY ./go.mod ./go.sum ./
 
+# Copy the local dependencies
+#COPY ../../search-service/search-service ../../search-service/search-service
+
 # # Copy the local dependency
 # COPY /common ../common
 

@@ -117,7 +117,7 @@ func decode(cursor *mongo.Cursor) (accommodations []*domain.Accommodation, err e
 	return
 }
 
-func (store *AccommodationMongoDBStore) UpdateDefaultPrice(id primitive.ObjectID, price *float64) error {
+func (store *AccommodationMongoDBStore) UpdateDefaultPrice(id primitive.ObjectID, price *float32) error {
 	if price == nil {
 		return nil
 	}

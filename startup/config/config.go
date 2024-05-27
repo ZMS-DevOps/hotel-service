@@ -11,6 +11,8 @@ type Config struct {
 	HotelDBPassword string
 	BookingHost     string
 	BookingPort     string
+	SearchHost      string
+	SearchPort      string
 }
 
 func NewConfig() *Config {
@@ -23,5 +25,7 @@ func NewConfig() *Config {
 		HotelDBPassword: os.Getenv("MONGO_INITDB_ROOT_PASSWORD"),
 		BookingHost:     os.Getenv("BOOKING_HOST"),
 		BookingPort:     os.Getenv("BOOKING_PORT"),
+		SearchHost:      os.Getenv("SEARCH_HOST"),
+		SearchPort:      os.Getenv("SEARCH_PORT"),
 	}
 }

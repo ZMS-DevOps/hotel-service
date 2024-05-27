@@ -3,6 +3,8 @@ cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/ZMS-DevOps/booking-service v1.0.0 h1:qyNFX3o4f8XxycVSebtkGFUaPxQazB21J2igISoEKd8=
 github.com/ZMS-DevOps/booking-service v1.0.0/go.mod h1:fei6vVF/7lZ0WohC+6uZ54RnNCcEt6KiW9XynxzQxCc=
+github.com/ZMS-DevOps/search-service v1.0.2 h1:ymPqZ32wRk2NpgTfCVwcTqXk283OOZ2v2JAxSE0vTYI=
+github.com/ZMS-DevOps/search-service v1.0.2/go.mod h1:gfgcz3ix1y7osLxM92r+RCd00+vssGB6EPLZyItTuxk=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash/v2 v2.1.1/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=

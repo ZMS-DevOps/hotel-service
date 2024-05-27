@@ -7,7 +7,7 @@ import (
 
 type UpdatePriceDto struct {
 	DateRange *DateRangeDTO `json:"date_range" validate:"omitempty"`
-	Price     *float64      `json:"price" validate:"omitempty,min=0"`
+	Price     *float32      `json:"price" validate:"omitempty,min=0"`
 	Type      *string       `json:"type" validate:"omitempty,oneof=PerApartmentUnit PerGuest"`
 }
 

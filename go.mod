@@ -1,16 +1,17 @@
 module github.com/ZMS-DevOps/hotel-service
+
 go 1.17
 
-// replace github.com/tamararankovic/microservices_demo/common => ../common
+//replace github.com/ZMS-DevOps/search-service => ../../search-service/search-service
 
 require (
 	github.com/ZMS-DevOps/booking-service v1.0.0
+	github.com/ZMS-DevOps/search-service v1.0.2
 	github.com/go-playground/validator/v10 v10.20.0
 	github.com/gorilla/mux v1.8.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.9.0
 	go.mongodb.org/mongo-driver v1.8.4
 	google.golang.org/grpc v1.45.0
-	google.golang.org/protobuf v1.27.1
 )
 
 require (
@@ -22,6 +23,7 @@ require (
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	google.golang.org/genproto v0.0.0-20220314164441-57ef72a4c106 // indirect
+	google.golang.org/protobuf v1.27.1 // indirect
 )
 
 require (

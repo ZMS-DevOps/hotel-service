@@ -1,9 +1,9 @@
 package application
 
 import (
-	"fmt"
 	booking "github.com/ZMS-DevOps/booking-service/proto"
 	"github.com/ZMS-DevOps/hotel-service/application/external"
+	search "github.com/ZMS-DevOps/search-service/proto"
 
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
@@ -13,13 +13,14 @@ import (
 type AccommodationService struct {
 	store         domain.AccommodationStore
 	bookingClient booking.BookingServiceClient
+	searchClient  search.SearchServiceClient
 }
 
-// func NewAccommodationService(store domain.AccommodationStore) *AccommodationService {
-func NewAccommodationService(store domain.AccommodationStore, bookingClient booking.BookingServiceClient) *AccommodationService {
+func NewAccommodationService(store domain.AccommodationStore, bookingClient booking.BookingServiceClient, searchClient search.SearchServiceClient) *AccommodationService {
 	return &AccommodationService{
 		store:         store,
 		bookingClient: bookingClient,
+		searchClient:  searchClient,
 	}
 }
 
@@ -36,11 +37,9 @@ func (service *AccommodationService) Add(accommodation *domain.Accommodation) er
 	if err != nil {
 		return err
 	}
-	// todo create booking empty unavailability object
-	fmt.Println(accommodation.Id)
-	fmt.Println("Stigao sammmmmmmm")
+	accommodation.SpecialPrice = []domain.SpecialPrice{}
 	_, err = external.CreateBookingUnavailability(service.bookingClient, accommodation.Id)
-	fmt.Println(err)
+	_, err = external.AddSearchAccommodation(service.searchClient, dto.MapToSearchAccommodation(accommodation))
 	if err != nil {
 		return err
 	}
@@ -56,7 +55,10 @@ func (service *AccommodationService) Update(id primitive.ObjectID, accommodation
 	if err != nil {
 		return err
 	}
-
+	_, err = external.EditSearchAccommodation(service.searchClient, dto.MapToSearchAccommodation(accommodation))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -69,7 +71,10 @@ func (service *AccommodationService) Delete(id primitive.ObjectID) error {
 	if err != nil {
 		return err
 	}
-
+	_, err = external.DeleteSearchAccommodation(service.searchClient, id)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -107,5 +112,14 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 			return err
 		}
 	}
+	updatedAccommodation, err := service.store.Get(id)
+	if err != nil {
+		return err
+	}
+	_, err = external.EditSearchAccommodation(service.searchClient, dto.MapToSearchAccommodation(updatedAccommodation))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

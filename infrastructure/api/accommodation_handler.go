@@ -58,7 +58,6 @@ func (handler *AccommodationHandler) Update(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// Validate the updated accommodation DTO
 	if err := dto.ValidateAccommodationDto(&updatedAccommodationDto); err != nil {
 		handleError(w, http.StatusBadRequest, err.Error())
 		return
@@ -88,7 +87,6 @@ func (handler *AccommodationHandler) UpdatePrice(w http.ResponseWriter, r *http.
 		return
 	}
 
-	// Validate update price dto
 	if err := dto.ValidateUpdatePriceDto(&updatePriceDto); err != nil {
 		handleError(w, http.StatusBadRequest, err.Error())
 		return
@@ -189,7 +187,6 @@ func (handler *AccommodationHandler) Add(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// Validate the updated accommodation DTO
 	if err := dto.ValidateAccommodationDto(&createAccommodationDto); err != nil {
 		handleError(w, http.StatusBadRequest, err.Error())
 		return
@@ -207,5 +204,6 @@ func (handler *AccommodationHandler) Add(w http.ResponseWriter, r *http.Request)
 
 func handleError(w http.ResponseWriter, statusCode int, message string) {
 	w.WriteHeader(statusCode)
+	w.Write([]byte(message))
 	fmt.Fprintf(w, message)
 }

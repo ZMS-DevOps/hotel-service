@@ -20,7 +20,7 @@ type GuestNumberDto struct {
 }
 
 type DefaultPriceDto struct {
-	Price float64 `json:"price" validate:"min=0"`
+	Price float32 `json:"price" validate:"min=0"`
 	Type  string  `json:"type" validate:"omitempty,oneof=PerApartmentUnit PerGuest"`
 }
 

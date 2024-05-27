@@ -7,3 +7,5 @@ data:
   SERVICE_PORT: "8080"
   BOOKING_HOST: "booking"
   BOOKING_PORT: "8001"
+  SEARCH_HOST: "search"
+  SEARCH_PORT: "8002"

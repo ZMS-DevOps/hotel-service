@@ -1,19 +1,12 @@
 package external
 
 import (
-	//"context"
-	//booking "github.com/ZMS-DevOps/hotel-service/proto"
-
 	"context"
 	booking "github.com/ZMS-DevOps/booking-service/proto"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
-	//"github.com/mmmajder/devops-search-service/proto"
-	//"google.golang.org/grpc"
-	//"google.golang.org/grpc/credentials/insecure"
-	//"log"
 )
 
 func NewBookingClient(address string) booking.BookingServiceClient {
@@ -21,7 +14,6 @@ func NewBookingClient(address string) booking.BookingServiceClient {
 	if err != nil {
 		log.Fatalf("Failed to start gRPC connection to Catalogue service: %v", err)
 	}
-	//defer conn.Close()
 	return booking.NewBookingServiceClient(conn)
 }
 

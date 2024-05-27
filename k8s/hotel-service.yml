@@ -49,6 +49,16 @@ spec:
                 configMapKeyRef:
                   name: hotel-configmap
                   key: BOOKING_PORT
+            - name: SEARCH_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: hotel-configmap
+                  key: SEARCH_HOST
+            - name: SEARCH_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: hotel-configmap
+                  key: SEARCH_PORT
 ---
 apiVersion: v1
 kind: Service
@@ -67,3 +77,7 @@ spec:
       name: grpc
       port: 8001
       targetPort: 8001
+#    - protocol: TCP
+#      name: search
+#      port: 8002
+#      targetPort: 8002
