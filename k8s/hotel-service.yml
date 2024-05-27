@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hotel
-#  namespace: backend
+  namespace: backend
 spec:
   replicas: 1
   selector:
@@ -19,65 +19,29 @@ spec:
           image: devopszms2024/zms-devops-hotel-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: 8084
           envFrom:
             - secretRef:
-                name: mongo-secret
-          env:
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: mongo-configmap
-                  key: db-host
-            - name: DB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: mongo-configmap
-                  key: db-port
-            - name: SERVICE_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: hotel-configmap
-                  key: SERVICE_PORT
-            - name: BOOKING_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: hotel-configmap
-                  key: BOOKING_HOST
-            - name: BOOKING_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: hotel-configmap
-                  key: BOOKING_PORT
-            - name: SEARCH_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: hotel-configmap
-                  key: SEARCH_HOST
-            - name: SEARCH_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: hotel-configmap
-                  key: SEARCH_PORT
+                name: mongodb-hotel-secret
+            - configMapRef:
+                name: hotel-configmap
+            - configMapRef:
+                name: mongodb-hotel-configmap
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: hotel
-#  namespace: backend
+  namespace: backend
 spec:
   selector:
     app: hotel
   ports:
     - protocol: TCP
       name: http
-      port: 80
-      targetPort: 8080
+      port: 8084
+      targetPort: 8084
     - protocol: TCP
       name: grpc
       port: 8001
       targetPort: 8001
-#    - protocol: TCP
-#      name: search
-#      port: 8002
-#      targetPort: 8002
