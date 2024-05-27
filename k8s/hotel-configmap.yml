@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hotel-configmap
+  namespace: backend
+data:
+  SERVICE_PORT: "8084"
+  BOOKING_HOST: "booking"
+  BOOKING_PORT: "8001"
+  SEARCH_HOST: "search"
+  SEARCH_PORT: "8002"
