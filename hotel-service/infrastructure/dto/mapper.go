@@ -54,7 +54,7 @@ func MapToSearchAccommodation(accommodation *domain.Accommodation) *search.Accom
 		MinGuestNumber:  int32(accommodation.GuestNumber.Min),
 		MaxGuestNumber:  int32(accommodation.GuestNumber.Max),
 		DefaultPrice:    accommodation.DefaultPrice.Price,
-		PriceType:       string(accommodation.DefaultPrice.Type),
+		PriceType:       string(rune(accommodation.DefaultPrice.Type)),
 		SpecialPrice:    mapSearchSpecialPrice(accommodation.SpecialPrice),
 	}
 }
