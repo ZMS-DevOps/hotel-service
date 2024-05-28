@@ -65,8 +65,8 @@ jobs:
         with:
           projectBaseDir: hotel-service
           args: >
-            -Dsonar.projectKey=ZMS-DevOps_hotel-service
             -Dsonar.organization=zms-devops
+            -Dsonar.projectKey=ZMS-DevOps_hotel-service
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.sources=.
             -Dsonar.verbose=true
