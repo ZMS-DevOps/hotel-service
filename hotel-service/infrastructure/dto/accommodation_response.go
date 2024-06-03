@@ -6,14 +6,16 @@ import (
 )
 
 type AccommodationResponse struct {
-	Id           primitive.ObjectID `bson:"id"`
-	Name         string             `bson:"name"`
-	Location     string             `bson:"location"`
-	Benefits     []string           `bson:"benefits"`
-	Photos       []string           `bson:"photos"`
-	GuestNumber  GuestNumberDto     `bson:"guest_number"`
-	DefaultPrice DefaultPriceDto    `bson:"default_price"`
-	SpecialPrice []SpecialPriceDto  `bson:"special_price"`
+	Id                                    primitive.ObjectID `bson:"id"`
+	HostId                                primitive.ObjectID `bson:"host_id"`
+	Name                                  string             `bson:"name"`
+	Location                              string             `bson:"location"`
+	Benefits                              []string           `bson:"benefits"`
+	Photos                                []string           `bson:"photos"`
+	GuestNumber                           GuestNumberDto     `bson:"guest_number"`
+	DefaultPrice                          DefaultPriceDto    `bson:"default_price"`
+	SpecialPrice                          []SpecialPriceDto  `bson:"special_price"`
+	ReviewReservationRequestAutomatically bool               `bson:"review_reservation_request_automatically"`
 }
 
 type GuestNumber struct {

@@ -3,15 +3,18 @@ package dto
 import (
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type AccommodationDto struct {
-	Name         string          `json:"name" validate:"required"`
-	Location     string          `json:"location" validate:"required"`
-	Benefits     []string        `json:"benefits"`
-	Photos       []string        `json:"photos"`
-	GuestNumber  GuestNumberDto  `json:"guest_number" validate:"required"`
-	DefaultPrice DefaultPriceDto `json:"default_price"  validate:"required"`
+	HostId                                primitive.ObjectID `json:"host_id" validate:"required"`
+	Name                                  string             `json:"name" validate:"required"`
+	Location                              string             `json:"location" validate:"required"`
+	Benefits                              []string           `json:"benefits"`
+	Photos                                []string           `json:"photos"`
+	GuestNumber                           GuestNumberDto     `json:"guest_number" validate:"required"`
+	DefaultPrice                          DefaultPriceDto    `json:"default_price"  validate:"required"`
+	ReviewReservationRequestAutomatically bool               `json:"review_reservation_request_automatically"`
 }
 
 type GuestNumberDto struct {

@@ -38,6 +38,8 @@ func (store *AccommodationMongoDBStore) GetAll() ([]*domain.Accommodation, error
 
 func (store *AccommodationMongoDBStore) Insert(accommodation *domain.Accommodation) error {
 	accommodation.Id = primitive.NewObjectID()
+	fmt.Println("accommodation2")
+	fmt.Println(accommodation)
 	result, err := store.accommodations.InsertOne(context.TODO(), accommodation)
 	if err != nil {
 		return err
@@ -72,6 +74,8 @@ func (store *AccommodationMongoDBStore) Update(id primitive.ObjectID, accommodat
 	filter := bson.M{"_id": id}
 
 	updateFields := bson.D{
+		{"host_id", accommodation.HostId},
+		{"review_reservation_request_automatically", accommodation.ReviewReservationRequestAutomatically},
 		{"name", accommodation.Name},
 		{"location", accommodation.Location},
 		{"benefits", accommodation.Benefits},

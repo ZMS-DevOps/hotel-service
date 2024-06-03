@@ -1,6 +1,7 @@
 package application
 
 import (
+	"fmt"
 	booking "github.com/ZMS-DevOps/booking-service/proto"
 	"github.com/ZMS-DevOps/hotel-service/application/external"
 	search "github.com/ZMS-DevOps/search-service/proto"
@@ -38,7 +39,7 @@ func (service *AccommodationService) Add(accommodation *domain.Accommodation) er
 		return err
 	}
 	accommodation.SpecialPrice = []domain.SpecialPrice{}
-	_, err = external.CreateBookingUnavailability(service.bookingClient, accommodation.Id)
+	_, err = external.CreateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically)
 	_, err = external.AddSearchAccommodation(service.searchClient, dto.MapToSearchAccommodation(accommodation))
 	if err != nil {
 		return err
@@ -51,10 +52,13 @@ func (service *AccommodationService) Update(id primitive.ObjectID, accommodation
 	if err != nil {
 		return err
 	}
+	fmt.Println("accommodation1")
+	fmt.Println(accommodation)
 	err = service.store.Update(id, accommodation)
 	if err != nil {
 		return err
 	}
+	_, err = external.UpdateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically)
 	_, err = external.EditSearchAccommodation(service.searchClient, dto.MapToSearchAccommodation(accommodation))
 	if err != nil {
 		return err
