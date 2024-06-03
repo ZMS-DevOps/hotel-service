@@ -4,5 +4,5 @@ metadata:
   name: mongodb-hotel-configmap
   namespace: backend
 data:
-  DB_HOST: "mongodb-service"
+  DB_HOST: "mongodb-hotel"
   DB_PORT: "27017"

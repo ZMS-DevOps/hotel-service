@@ -42,3 +42,14 @@ type DateRange struct {
 	Start time.Time `bson:"start"`
 	End   time.Time `bson:"end"`
 }
+
+func (p PricingType) String() string {
+	switch p {
+	case PerApartmentUnit:
+		return "PerApartmentUnit"
+	case PerGuest:
+		return "PerGuest"
+	default:
+		return "Unknown"
+	}
+}
