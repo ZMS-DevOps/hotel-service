@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "proto/hotel";
+
+package hotel;
+
+
+service HotelService{
+  rpc AddUser(AddUserRequest) returns(AddUserResponse) {}
+}
+
+message AddUserRequest {
+  string id = 1;
+}
+
+message AddUserResponse {
+}

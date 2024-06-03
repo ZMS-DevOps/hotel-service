@@ -43,6 +43,10 @@ type DateRange struct {
 	End   time.Time `bson:"end"`
 }
 
+type User struct {
+	Id primitive.ObjectID `bson:"_id"`
+}
+
 func (p PricingType) String() string {
 	switch p {
 	case PerApartmentUnit:
