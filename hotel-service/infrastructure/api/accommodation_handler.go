@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ZMS-DevOps/hotel-service/application"
-	"github.com/ZMS-DevOps/hotel-service/domain"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -13,14 +12,6 @@ import (
 
 type AccommodationHandler struct {
 	service *application.AccommodationService
-}
-
-type AccommodationsResponse struct {
-	Accommodations []*domain.Accommodation `json:"accommodations"`
-}
-
-type AccommodationResponse struct {
-	Accommodation *domain.Accommodation `json:"accommodation"`
 }
 
 type HealthCheckResponse struct {
@@ -35,13 +26,13 @@ func NewAccommodationHandler(service *application.AccommodationService) *Accommo
 }
 
 func (handler *AccommodationHandler) Init(router *mux.Router) {
-	router.HandleFunc(`/hotel/accommodation`, handler.GetAll).Methods("GET")
-	router.HandleFunc("/hotel/accommodation/{id}", handler.GetById).Methods("GET")
-	router.HandleFunc("/hotel/accommodation", handler.Add).Methods("POST")
-	router.HandleFunc("/hotel/accommodation/{id}", handler.Update).Methods("PUT")
-	router.HandleFunc("/hotel/accommodation/{id}", handler.Delete).Methods("DELETE")
-	router.HandleFunc("/hotel/accommodation/price/{id}", handler.UpdatePrice).Methods("PUT")
-	router.HandleFunc("/hotel/health", handler.GetHealthCheck).Methods("GET")
+	router.HandleFunc(`/accommodation`, handler.GetAll).Methods("GET")
+	router.HandleFunc("/accommodation/{id}", handler.GetById).Methods("GET")
+	router.HandleFunc("/accommodation", handler.Add).Methods("POST")
+	router.HandleFunc("/accommodation/{id}", handler.Update).Methods("PUT")
+	router.HandleFunc("/accommodation/{id}", handler.Delete).Methods("DELETE")
+	router.HandleFunc("/accommodation/price/{id}", handler.UpdatePrice).Methods("PUT")
+	router.HandleFunc("/accommodation/health", handler.GetHealthCheck).Methods("GET")
 }
 
 func (handler *AccommodationHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -146,9 +137,7 @@ func (handler *AccommodationHandler) GetById(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	response := AccommodationResponse{
-		Accommodation: accommodation,
-	}
+	response := dto.MapAccommodationResponse(*accommodation)
 
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
@@ -160,18 +149,20 @@ func (handler *AccommodationHandler) GetById(w http.ResponseWriter, r *http.Requ
 }
 
 func (handler *AccommodationHandler) GetAll(w http.ResponseWriter, r *http.Request) {
-	accommodation, err := handler.service.GetAll()
+	accommodations, err := handler.service.GetAll()
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	response := AccommodationsResponse{
-		Accommodations: accommodation,
+	var responses []*dto.AccommodationResponse
+	for _, acc := range accommodations {
+		response := dto.MapAccommodationResponse(*acc)
+		responses = append(responses, response)
 	}
 
-	jsonResponse, err := json.Marshal(response)
+	jsonResponse, err := json.Marshal(responses)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

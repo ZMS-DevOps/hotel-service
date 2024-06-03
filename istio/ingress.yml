@@ -11,7 +11,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: "/hotel"
+            prefix: "/accommodation"
       route:
         - destination:
             host: hotel.backend.svc.cluster.local

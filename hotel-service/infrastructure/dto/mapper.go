@@ -12,23 +12,37 @@ func MapAccommodation(accommodation *AccommodationDto) *domain.Accommodation {
 		Location:     accommodation.Location,
 		Benefits:     accommodation.Benefits,
 		Photos:       accommodation.Photos,
-		GuestNumber:  mapGuestNumber(&accommodation.GuestNumber),
-		DefaultPrice: mapDefaultPrice(&accommodation.DefaultPrice),
+		GuestNumber:  mapGuestNumberDto(&accommodation.GuestNumber),
+		DefaultPrice: mapDefaultPriceDto(&accommodation.DefaultPrice),
 	}
 	return accommodationPb
 }
 
-func mapGuestNumber(guestNumber *GuestNumberDto) domain.GuestNumber {
+func mapGuestNumberDto(guestNumber *GuestNumberDto) domain.GuestNumber {
 	return domain.GuestNumber{
 		Min: guestNumber.Min,
 		Max: guestNumber.Max,
 	}
 }
 
-func mapDefaultPrice(defaultPrice *DefaultPriceDto) domain.DefaultPrice {
+func mapGuestNumber(guestNumber *domain.GuestNumber) GuestNumberDto {
+	return GuestNumberDto{
+		Min: guestNumber.Min,
+		Max: guestNumber.Max,
+	}
+}
+
+func mapDefaultPriceDto(defaultPrice *DefaultPriceDto) domain.DefaultPrice {
 	return domain.DefaultPrice{
 		Price: defaultPrice.Price,
 		Type:  *MapPricingType(&defaultPrice.Type),
+	}
+}
+
+func mapDefaultPrice(defaultPrice *domain.DefaultPrice) DefaultPriceDto {
+	return DefaultPriceDto{
+		Price: defaultPrice.Price,
+		Type:  defaultPrice.Type.String(),
 	}
 }
 
@@ -54,7 +68,7 @@ func MapToSearchAccommodation(accommodation *domain.Accommodation) *search.Accom
 		MinGuestNumber:  int32(accommodation.GuestNumber.Min),
 		MaxGuestNumber:  int32(accommodation.GuestNumber.Max),
 		DefaultPrice:    accommodation.DefaultPrice.Price,
-		PriceType:       string(rune(accommodation.DefaultPrice.Type)),
+		PriceType:       accommodation.DefaultPrice.Type.String(),
 		SpecialPrice:    mapSearchSpecialPrice(accommodation.SpecialPrice),
 	}
 }
@@ -77,4 +91,35 @@ func addSpecialPrice(p domain.SpecialPrice, result []*search.SpecialPrice) []*se
 	}
 	result = append(result, sp)
 	return result
+}
+
+func toDateRangeDto(dataRange domain.DateRange) DateRangeDto {
+	return DateRangeDto{
+		Start: dataRange.Start,
+		End:   dataRange.End,
+	}
+}
+
+func toSpecialPriceDto(specialPrice []domain.SpecialPrice) []SpecialPriceDto {
+	var result []SpecialPriceDto
+	for _, p := range specialPrice {
+		result = append(result, SpecialPriceDto{
+			Price:     p.Price,
+			DateRange: toDateRangeDto(p.DateRange),
+		})
+	}
+	return result
+}
+
+func MapAccommodationResponse(accommodation domain.Accommodation) *AccommodationResponse {
+	return &AccommodationResponse{
+		Id:           accommodation.Id,
+		Name:         accommodation.Name,
+		Location:     accommodation.Location,
+		Benefits:     accommodation.Benefits,
+		Photos:       accommodation.Photos,
+		GuestNumber:  mapGuestNumber(&accommodation.GuestNumber),
+		DefaultPrice: mapDefaultPrice(&accommodation.DefaultPrice),
+		SpecialPrice: toSpecialPriceDto(accommodation.SpecialPrice),
+	}
 }
