@@ -10,18 +10,7 @@ spec:
   rules:
     - to:
         - operation:
-#            methods: [ "GET" ]
-#            paths: [ "/hotel/health" ]
             methods: [ "GET", "PUT", "POST", "DELETE" ]
             paths: [ "/accommodation/health", "/accommodation*", "/accommodation/**", "/accommodation/price/*", "/accommodation/price/**" ]
-#    - to:
-#        - operation:
-#            methods: [ "GET", "PUT", "POST", "DELETE" ]
-#            paths: [ "/hotel/accommodation*", "/hotel/accommodation/**", "/hotel/accommodation/price/*", "/hotel/accommodation/price/**" ]
-#      from:
-#        - source:
-#              requestPrincipals: [ "*" ]
-#      when:
-#        - key: request.auth.claims[realm_access][roles]
-#          values: [ "admin" ]
+
 
