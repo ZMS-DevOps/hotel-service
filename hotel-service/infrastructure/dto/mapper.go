@@ -115,7 +115,7 @@ func toSpecialPriceDto(specialPrice []domain.SpecialPrice) []SpecialPriceDto {
 
 func MapAccommodationResponse(accommodation domain.Accommodation) *AccommodationResponse {
 	return &AccommodationResponse{
-		Id:                                    accommodation.Id,
+		Id:                                    accommodation.Id.Hex(),
 		Name:                                  accommodation.Name,
 		Location:                              accommodation.Location,
 		Benefits:                              accommodation.Benefits,
@@ -123,7 +123,7 @@ func MapAccommodationResponse(accommodation domain.Accommodation) *Accommodation
 		GuestNumber:                           mapGuestNumber(&accommodation.GuestNumber),
 		DefaultPrice:                          mapDefaultPrice(&accommodation.DefaultPrice),
 		SpecialPrice:                          toSpecialPriceDto(accommodation.SpecialPrice),
-		HostId:                                accommodation.HostId,
+		HostId:                                accommodation.HostId.Hex(),
 		ReviewReservationRequestAutomatically: accommodation.ReviewReservationRequestAutomatically,
 	}
 }

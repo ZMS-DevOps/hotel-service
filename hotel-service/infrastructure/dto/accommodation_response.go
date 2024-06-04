@@ -1,34 +1,33 @@
 package dto
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
 type AccommodationResponse struct {
-	Id                                    primitive.ObjectID `bson:"id"`
-	HostId                                primitive.ObjectID `bson:"host_id"`
-	Name                                  string             `bson:"name"`
-	Location                              string             `bson:"location"`
-	Benefits                              []string           `bson:"benefits"`
-	Photos                                []string           `bson:"photos"`
-	GuestNumber                           GuestNumberDto     `bson:"guest_number"`
-	DefaultPrice                          DefaultPriceDto    `bson:"default_price"`
-	SpecialPrice                          []SpecialPriceDto  `bson:"special_price"`
-	ReviewReservationRequestAutomatically bool               `bson:"review_reservation_request_automatically"`
+	Id                                    string            `json:"id"`
+	HostId                                string            `json:"host_id"`
+	Name                                  string            `json:"name"`
+	Location                              string            `json:"location"`
+	Benefits                              []string          `json:"benefits"`
+	Photos                                []string          `json:"photos"`
+	GuestNumber                           GuestNumberDto    `json:"guest_number"`
+	DefaultPrice                          DefaultPriceDto   `json:"default_price"`
+	SpecialPrice                          []SpecialPriceDto `json:"special_price"`
+	ReviewReservationRequestAutomatically bool              `json:"review_reservation_request_automatically"`
 }
 
 type GuestNumber struct {
-	Min int `bson:"min"`
-	Max int `bson:"max"`
+	Min int `json:"min"`
+	Max int `json:"max"`
 }
 
 type SpecialPriceDto struct {
-	Price     float32      `bson:"price"`
-	DateRange DateRangeDto `bson:"date_range"`
+	Price     float32      `json:"price"`
+	DateRange DateRangeDto `json:"date_range"`
 }
 
 type DateRangeDto struct {
-	Start time.Time `bson:"start"`
-	End   time.Time `bson:"end"`
+	Start time.Time `json:"start"`
+	End   time.Time `json:"end"`
 }

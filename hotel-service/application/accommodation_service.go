@@ -1,7 +1,6 @@
 package application
 
 import (
-	"fmt"
 	booking "github.com/ZMS-DevOps/booking-service/proto"
 	"github.com/ZMS-DevOps/hotel-service/application/external"
 	search "github.com/ZMS-DevOps/search-service/proto"
@@ -52,8 +51,6 @@ func (service *AccommodationService) Update(id primitive.ObjectID, accommodation
 	if err != nil {
 		return err
 	}
-	fmt.Println("accommodation1")
-	fmt.Println(accommodation)
 	err = service.store.Update(id, accommodation)
 	if err != nil {
 		return err
