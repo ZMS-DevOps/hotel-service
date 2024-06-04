@@ -8,12 +8,14 @@ import (
 
 func MapAccommodation(accommodation *AccommodationDto) *domain.Accommodation {
 	accommodationPb := &domain.Accommodation{
-		Name:         accommodation.Name,
-		Location:     accommodation.Location,
-		Benefits:     accommodation.Benefits,
-		Photos:       accommodation.Photos,
-		GuestNumber:  mapGuestNumberDto(&accommodation.GuestNumber),
-		DefaultPrice: mapDefaultPriceDto(&accommodation.DefaultPrice),
+		HostId:                                accommodation.HostId,
+		Name:                                  accommodation.Name,
+		Location:                              accommodation.Location,
+		Benefits:                              accommodation.Benefits,
+		Photos:                                accommodation.Photos,
+		GuestNumber:                           mapGuestNumberDto(&accommodation.GuestNumber),
+		DefaultPrice:                          mapDefaultPriceDto(&accommodation.DefaultPrice),
+		ReviewReservationRequestAutomatically: accommodation.ReviewReservationRequestAutomatically,
 	}
 	return accommodationPb
 }
@@ -113,13 +115,15 @@ func toSpecialPriceDto(specialPrice []domain.SpecialPrice) []SpecialPriceDto {
 
 func MapAccommodationResponse(accommodation domain.Accommodation) *AccommodationResponse {
 	return &AccommodationResponse{
-		Id:           accommodation.Id,
-		Name:         accommodation.Name,
-		Location:     accommodation.Location,
-		Benefits:     accommodation.Benefits,
-		Photos:       accommodation.Photos,
-		GuestNumber:  mapGuestNumber(&accommodation.GuestNumber),
-		DefaultPrice: mapDefaultPrice(&accommodation.DefaultPrice),
-		SpecialPrice: toSpecialPriceDto(accommodation.SpecialPrice),
+		Id:                                    accommodation.Id.Hex(),
+		Name:                                  accommodation.Name,
+		Location:                              accommodation.Location,
+		Benefits:                              accommodation.Benefits,
+		Photos:                                accommodation.Photos,
+		GuestNumber:                           mapGuestNumber(&accommodation.GuestNumber),
+		DefaultPrice:                          mapDefaultPrice(&accommodation.DefaultPrice),
+		SpecialPrice:                          toSpecialPriceDto(accommodation.SpecialPrice),
+		HostId:                                accommodation.HostId.Hex(),
+		ReviewReservationRequestAutomatically: accommodation.ReviewReservationRequestAutomatically,
 	}
 }

@@ -72,6 +72,8 @@ func (store *AccommodationMongoDBStore) Update(id primitive.ObjectID, accommodat
 	filter := bson.M{"_id": id}
 
 	updateFields := bson.D{
+		{"host_id", accommodation.HostId},
+		{"review_reservation_request_automatically", accommodation.ReviewReservationRequestAutomatically},
 		{"name", accommodation.Name},
 		{"location", accommodation.Location},
 		{"benefits", accommodation.Benefits},
