@@ -32,6 +32,10 @@ func (service *AccommodationService) GetAll() ([]*domain.Accommodation, error) {
 	return service.store.GetAll()
 }
 
+func (service *AccommodationService) GetByHostId(ownerId primitive.ObjectID) ([]*domain.Accommodation, error) {
+	return service.store.GetByHostId(ownerId)
+}
+
 func (service *AccommodationService) Add(accommodation *domain.Accommodation) error {
 	err := service.store.Insert(accommodation)
 	if err != nil {
@@ -84,6 +88,7 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 	if err != nil {
 		return err
 	}
+
 	if updatePriceDto.DateRange == nil && updatePriceDto.Price != nil {
 		if err := updateDefaultPrice(id, updatePriceDto, service); err != nil {
 			return err
@@ -98,6 +103,7 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 			return err
 		}
 	}
+
 	updatedAccommodation, err := service.store.Get(id)
 	if err != nil {
 		return err

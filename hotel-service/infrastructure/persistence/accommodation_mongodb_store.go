@@ -36,6 +36,11 @@ func (store *AccommodationMongoDBStore) GetAll() ([]*domain.Accommodation, error
 	return store.filter(filter)
 }
 
+func (store *AccommodationMongoDBStore) GetByHostId(hostId primitive.ObjectID) ([]*domain.Accommodation, error) {
+	filter := bson.M{"host_id": hostId}
+	return store.filter(filter)
+}
+
 func (store *AccommodationMongoDBStore) Insert(accommodation *domain.Accommodation) error {
 	accommodation.Id = primitive.NewObjectID()
 	result, err := store.accommodations.InsertOne(context.TODO(), accommodation)

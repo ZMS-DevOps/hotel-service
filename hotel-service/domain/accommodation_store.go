@@ -7,6 +7,7 @@ import (
 type AccommodationStore interface {
 	Get(id primitive.ObjectID) (*Accommodation, error)
 	GetAll() ([]*Accommodation, error)
+	GetByHostId(ownerId primitive.ObjectID) ([]*Accommodation, error)
 	Insert(accommodation *Accommodation) error
 	InsertWithId(accommodation *Accommodation) error
 	DeleteAll()

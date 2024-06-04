@@ -28,6 +28,7 @@ func NewAccommodationHandler(service *application.AccommodationService) *Accommo
 func (handler *AccommodationHandler) Init(router *mux.Router) {
 	router.HandleFunc(`/accommodation`, handler.GetAll).Methods("GET")
 	router.HandleFunc("/accommodation/{id}", handler.GetById).Methods("GET")
+	router.HandleFunc("/accommodation/host/{id}", handler.GetByHostId).Methods("GET")
 	router.HandleFunc("/accommodation", handler.Add).Methods("POST")
 	router.HandleFunc("/accommodation/{id}", handler.Update).Methods("PUT")
 	router.HandleFunc("/accommodation/{id}", handler.Delete).Methods("DELETE")
@@ -111,6 +112,36 @@ func (handler *AccommodationHandler) Delete(w http.ResponseWriter, r *http.Reque
 func (handler *AccommodationHandler) GetHealthCheck(w http.ResponseWriter, r *http.Request) {
 	response := HealthCheckResponse{
 		Size: "Hotel SERVICE OK",
+	}
+
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResponse)
+}
+
+func (handler *AccommodationHandler) GetByHostId(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId, err := primitive.ObjectIDFromHex(vars["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	accommodations, err := handler.service.GetByHostId(userId)
+
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	var response []*dto.AccommodationResponse
+	for _, acc := range accommodations {
+		accommodationResponse := dto.MapAccommodationResponse(*acc)
+		response = append(response, accommodationResponse)
 	}
 
 	jsonResponse, err := json.Marshal(response)
