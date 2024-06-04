@@ -42,7 +42,7 @@ func (service *AccommodationService) Add(accommodation *domain.Accommodation) er
 		return err
 	}
 	accommodation.SpecialPrice = []domain.SpecialPrice{}
-	_, err = external.CreateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically)
+	_, err = external.CreateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically, accommodation.HostId, accommodation.Name)
 	_, err = external.AddSearchAccommodation(service.searchClient, dto.MapToSearchAccommodation(accommodation))
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func (service *AccommodationService) Update(id primitive.ObjectID, accommodation
 	if err != nil {
 		return err
 	}
-	_, err = external.UpdateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically)
+	_, err = external.UpdateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically, accommodation.HostId, accommodation.Name)
 	_, err = external.EditSearchAccommodation(service.searchClient, dto.MapToSearchAccommodation(accommodation))
 	if err != nil {
 		return err

@@ -1,8 +1,8 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/ZMS-DevOps/booking-service v1.0.8 h1:9RX1fenNlq7NivZ421LN9MpM6yKtFN48FaOlhhc3RLk=
-github.com/ZMS-DevOps/booking-service v1.0.8/go.mod h1:vo6jVuYeWXMKXh9bhZ7NfOyAjAd/sHxIKhkXMAN4YkA=
+github.com/ZMS-DevOps/booking-service v1.0.9 h1:xADqAcMm4oOLBJRp9ZCEaGYxwMjqdIQvM66Bz/b1M/4=
+github.com/ZMS-DevOps/booking-service v1.0.9/go.mod h1:vo6jVuYeWXMKXh9bhZ7NfOyAjAd/sHxIKhkXMAN4YkA=
 github.com/ZMS-DevOps/search-service v1.0.2 h1:ymPqZ32wRk2NpgTfCVwcTqXk283OOZ2v2JAxSE0vTYI=
 github.com/ZMS-DevOps/search-service v1.0.2/go.mod h1:gfgcz3ix1y7osLxM92r+RCd00+vssGB6EPLZyItTuxk=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=

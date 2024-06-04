@@ -5,7 +5,7 @@ go 1.22
 //replace github.com/ZMS-DevOps/search-service => ../../search-service/search-service
 
 require (
-	github.com/ZMS-DevOps/booking-service v1.0.8
+	github.com/ZMS-DevOps/booking-service v1.0.9
 	github.com/ZMS-DevOps/search-service v1.0.2
 	github.com/go-playground/validator/v10 v10.20.0
 	github.com/gorilla/mux v1.8.1
