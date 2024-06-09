@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/ZMS-DevOps/hotel-service/application"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"log"
 	"net/http"
 )
 
@@ -222,6 +224,15 @@ func (handler *AccommodationHandler) Add(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.WriteHeader(http.StatusCreated)
+}
+
+func (handler *AccommodationHandler) OnDeleteAccommodations(message *kafka.Message) {
+	var deleteAccommodationRequest dto.DeleteAccommodationsRequest
+	if err := json.Unmarshal(message.Value, &deleteAccommodationRequest); err != nil {
+		log.Printf("Error unmarshalling rating change request: %v", err)
+	}
+
+	handler.service.OnDeleteAccommodations(deleteAccommodationRequest.HostId)
 }
 
 func handleError(w http.ResponseWriter, statusCode int, message string) {

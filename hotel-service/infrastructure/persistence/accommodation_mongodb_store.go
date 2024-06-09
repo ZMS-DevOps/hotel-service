@@ -161,6 +161,12 @@ func (store *AccommodationMongoDBStore) GetSpecialPrices(id primitive.ObjectID) 
 	return accommodation.SpecialPrice, nil
 }
 
+func (store *AccommodationMongoDBStore) DeleteByHostId(hostId primitive.ObjectID) error {
+	filter := bson.M{"host_id": hostId}
+	_, err := store.accommodations.DeleteMany(context.TODO(), filter)
+	return err
+}
+
 func (store *AccommodationMongoDBStore) UpdateTypeOfPayment(id primitive.ObjectID, typeOfPayment *string) error {
 	if typeOfPayment == nil {
 		return fmt.Errorf("payment type is nil but should not be")

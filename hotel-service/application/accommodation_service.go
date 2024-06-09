@@ -3,11 +3,11 @@ package application
 import (
 	booking "github.com/ZMS-DevOps/booking-service/proto"
 	"github.com/ZMS-DevOps/hotel-service/application/external"
-	search "github.com/ZMS-DevOps/search-service/proto"
-
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
+	search "github.com/ZMS-DevOps/search-service/proto"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"log"
 )
 
 type AccommodationService struct {
@@ -114,6 +114,22 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 	}
 
 	return nil
+}
+
+func (service *AccommodationService) OnDeleteAccommodations(hostId string) {
+	userId, err := primitive.ObjectIDFromHex(hostId)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	accomodations, err := service.store.GetByHostId(userId)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	for _, accom := range accomodations {
+		service.Delete(accom.Id)
+	}
 }
 
 func updateSpecialPrice(id primitive.ObjectID, updatePriceDto dto.UpdatePriceDto, service *AccommodationService) error {

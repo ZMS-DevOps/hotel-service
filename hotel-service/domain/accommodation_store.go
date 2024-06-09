@@ -17,4 +17,5 @@ type AccommodationStore interface {
 	UpdateSpecialPrice(id primitive.ObjectID, newSpecialPrices []SpecialPrice) error
 	UpdateTypeOfPayment(id primitive.ObjectID, typeOfPayment *string) error
 	GetSpecialPrices(id primitive.ObjectID) ([]SpecialPrice, error)
+	DeleteByHostId(hostId primitive.ObjectID) error
 }
