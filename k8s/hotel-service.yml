@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: hotel
-          image: devopszms2024/zms-devops-hotel-service:latest
+          image: devopszms2024/zms-devops-hotel-service:1.1.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8084

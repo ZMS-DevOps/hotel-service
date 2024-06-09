@@ -123,7 +123,7 @@ func MapAccommodationResponse(accommodation domain.Accommodation) *Accommodation
 		GuestNumber:                           mapGuestNumber(&accommodation.GuestNumber),
 		DefaultPrice:                          mapDefaultPrice(&accommodation.DefaultPrice),
 		SpecialPrice:                          toSpecialPriceDto(accommodation.SpecialPrice),
-		HostId:                                accommodation.HostId.Hex(),
+		HostId:                                accommodation.HostId,
 		ReviewReservationRequestAutomatically: accommodation.ReviewReservationRequestAutomatically,
 	}
 }

@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/ZMS-DevOps/hotel-service/application"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
@@ -127,9 +126,9 @@ func (handler *AccommodationHandler) GetHealthCheck(w http.ResponseWriter, r *ht
 
 func (handler *AccommodationHandler) GetByHostId(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	userId, err := primitive.ObjectIDFromHex(vars["id"])
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+	userId := vars["id"]
+	if userId == "" {
+		handleError(w, http.StatusBadRequest, "Invalid owner ID")
 		return
 	}
 
@@ -238,5 +237,4 @@ func (handler *AccommodationHandler) OnDeleteAccommodations(message *kafka.Messa
 func handleError(w http.ResponseWriter, statusCode int, message string) {
 	w.WriteHeader(statusCode)
 	w.Write([]byte(message))
-	fmt.Fprintf(w, message)
 }

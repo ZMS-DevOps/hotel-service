@@ -21,24 +21,24 @@ func getConnection(address string) (*grpc.ClientConn, error) {
 	return grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 }
 
-func CreateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId primitive.ObjectID, name string) (*booking.AddUnavailabilityResponse, error) {
+func CreateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId string, name string) (*booking.AddUnavailabilityResponse, error) {
 	return bookingClient.AddUnavailability(
 		context.TODO(),
 		&booking.AddUnavailabilityRequest{
 			Id:                id.Hex(),
 			Automatically:     reviewReservationRequestAutomatically,
-			HostId:            hostId.Hex(),
+			HostId:            hostId,
 			AccommodationName: name,
 		})
 }
 
-func UpdateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId primitive.ObjectID, name string) (*booking.EditAccommodationResponse, error) {
+func UpdateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId string, name string) (*booking.EditAccommodationResponse, error) {
 	return bookingClient.EditAccommodation(
 		context.TODO(),
 		&booking.EditAccommodationRequest{
 			Id:                id.Hex(),
 			Automatically:     reviewReservationRequestAutomatically,
-			HostId:            hostId.Hex(),
+			HostId:            hostId,
 			AccommodationName: name,
 		})
 }

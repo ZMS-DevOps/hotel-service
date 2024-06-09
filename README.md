@@ -1,5 +1,11 @@
 # Example 
 
+Build and push to DockerHub
+```shell
+docker build -t devopszms2024/zms-devops-hotel-service:1.1.1 .
+docker push devopszms2024/zms-devops-hotel-service:1.1.1
+```
+
 Turn on ingress 
 
 ```shell
