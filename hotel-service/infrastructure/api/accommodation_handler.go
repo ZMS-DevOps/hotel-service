@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/ZMS-DevOps/hotel-service/application"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"log"
 	"net/http"
 )
 
@@ -28,6 +30,7 @@ func NewAccommodationHandler(service *application.AccommodationService) *Accommo
 func (handler *AccommodationHandler) Init(router *mux.Router) {
 	router.HandleFunc(`/accommodation`, handler.GetAll).Methods("GET")
 	router.HandleFunc("/accommodation/{id}", handler.GetById).Methods("GET")
+	router.HandleFunc("/accommodation/host/{id}", handler.GetByHostId).Methods("GET")
 	router.HandleFunc("/accommodation", handler.Add).Methods("POST")
 	router.HandleFunc("/accommodation/{id}", handler.Update).Methods("PUT")
 	router.HandleFunc("/accommodation/{id}", handler.Delete).Methods("DELETE")
@@ -122,6 +125,36 @@ func (handler *AccommodationHandler) GetHealthCheck(w http.ResponseWriter, r *ht
 	w.Write(jsonResponse)
 }
 
+func (handler *AccommodationHandler) GetByHostId(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId, err := primitive.ObjectIDFromHex(vars["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	accommodations, err := handler.service.GetByHostId(userId)
+
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	var response []*dto.AccommodationResponse
+	for _, acc := range accommodations {
+		accommodationResponse := dto.MapAccommodationResponse(*acc)
+		response = append(response, accommodationResponse)
+	}
+
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResponse)
+}
+
 func (handler *AccommodationHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	accommodationId, err := primitive.ObjectIDFromHex(vars["id"])
@@ -191,6 +224,15 @@ func (handler *AccommodationHandler) Add(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.WriteHeader(http.StatusCreated)
+}
+
+func (handler *AccommodationHandler) OnDeleteAccommodations(message *kafka.Message) {
+	var deleteAccommodationRequest dto.DeleteAccommodationsRequest
+	if err := json.Unmarshal(message.Value, &deleteAccommodationRequest); err != nil {
+		log.Printf("Error unmarshalling rating change request: %v", err)
+	}
+
+	handler.service.OnDeleteAccommodations(deleteAccommodationRequest.HostId)
 }
 
 func handleError(w http.ResponseWriter, statusCode int, message string) {

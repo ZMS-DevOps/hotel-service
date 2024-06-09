@@ -18,8 +18,9 @@ import (
 )
 
 type Server struct {
-	config *config.Config
-	router *mux.Router
+	config               *config.Config
+	router               *mux.Router
+	AccommodationHandler *api.AccommodationHandler
 }
 
 func NewServer(config *config.Config) *Server {
@@ -27,10 +28,11 @@ func NewServer(config *config.Config) *Server {
 		config: config,
 		router: mux.NewRouter(),
 	}
+	server.AccommodationHandler = server.setupHandlers()
 	return server
 }
 
-func (server *Server) Start() {
+func (server *Server) setupHandlers() *api.AccommodationHandler {
 	mongoClient := server.initMongoClient()
 	bookingClient := external.NewBookingClient(server.getBookingAddress())
 	searchClient := external.NewSearchClient(server.getSearchAddress())
@@ -38,6 +40,10 @@ func (server *Server) Start() {
 	accommodationService := server.initAccommodationService(accommodationStore, bookingClient, searchClient)
 	accommodationHandler := server.initAccommodationHandler(accommodationService)
 	accommodationHandler.Init(server.router)
+	return accommodationHandler
+}
+
+func (server *Server) Start() {
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), server.router))
 }
 

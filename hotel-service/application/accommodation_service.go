@@ -3,11 +3,11 @@ package application
 import (
 	booking "github.com/ZMS-DevOps/booking-service/proto"
 	"github.com/ZMS-DevOps/hotel-service/application/external"
-	search "github.com/ZMS-DevOps/search-service/proto"
-
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
+	search "github.com/ZMS-DevOps/search-service/proto"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"log"
 )
 
 type AccommodationService struct {
@@ -32,13 +32,17 @@ func (service *AccommodationService) GetAll() ([]*domain.Accommodation, error) {
 	return service.store.GetAll()
 }
 
+func (service *AccommodationService) GetByHostId(ownerId primitive.ObjectID) ([]*domain.Accommodation, error) {
+	return service.store.GetByHostId(ownerId)
+}
+
 func (service *AccommodationService) Add(accommodation *domain.Accommodation) error {
 	err := service.store.Insert(accommodation)
 	if err != nil {
 		return err
 	}
 	accommodation.SpecialPrice = []domain.SpecialPrice{}
-	_, err = external.CreateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically)
+	_, err = external.CreateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically, accommodation.HostId, accommodation.Name)
 	_, err = external.AddSearchAccommodation(service.searchClient, dto.MapToSearchAccommodation(accommodation))
 	if err != nil {
 		return err
@@ -55,7 +59,7 @@ func (service *AccommodationService) Update(id primitive.ObjectID, accommodation
 	if err != nil {
 		return err
 	}
-	_, err = external.UpdateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically)
+	_, err = external.UpdateBookingUnavailability(service.bookingClient, accommodation.Id, accommodation.ReviewReservationRequestAutomatically, accommodation.HostId, accommodation.Name)
 	_, err = external.EditSearchAccommodation(service.searchClient, dto.MapToSearchAccommodation(accommodation))
 	if err != nil {
 		return err
@@ -84,6 +88,7 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 	if err != nil {
 		return err
 	}
+
 	if updatePriceDto.DateRange == nil && updatePriceDto.Price != nil {
 		if err := updateDefaultPrice(id, updatePriceDto, service); err != nil {
 			return err
@@ -98,6 +103,7 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 			return err
 		}
 	}
+
 	updatedAccommodation, err := service.store.Get(id)
 	if err != nil {
 		return err
@@ -108,6 +114,22 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 	}
 
 	return nil
+}
+
+func (service *AccommodationService) OnDeleteAccommodations(hostId string) {
+	userId, err := primitive.ObjectIDFromHex(hostId)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	accomodations, err := service.store.GetByHostId(userId)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	for _, accom := range accomodations {
+		service.Delete(accom.Id)
+	}
 }
 
 func updateSpecialPrice(id primitive.ObjectID, updatePriceDto dto.UpdatePriceDto, service *AccommodationService) error {
