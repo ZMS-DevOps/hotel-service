@@ -32,7 +32,7 @@ func (service *AccommodationService) GetAll() ([]*domain.Accommodation, error) {
 	return service.store.GetAll()
 }
 
-func (service *AccommodationService) GetByHostId(ownerId primitive.ObjectID) ([]*domain.Accommodation, error) {
+func (service *AccommodationService) GetByHostId(ownerId string) ([]*domain.Accommodation, error) {
 	return service.store.GetByHostId(ownerId)
 }
 
@@ -117,12 +117,7 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 }
 
 func (service *AccommodationService) OnDeleteAccommodations(hostId string) {
-	userId, err := primitive.ObjectIDFromHex(hostId)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	accomodations, err := service.store.GetByHostId(userId)
+	accomodations, err := service.store.GetByHostId(hostId)
 	if err != nil {
 		log.Println(err)
 		return

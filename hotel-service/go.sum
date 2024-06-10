@@ -14,8 +14,8 @@ github.com/Microsoft/hcsshim v0.11.4 h1:68vKo2VN8DE9AdN4tnkWnmdhqdbpUFM8OF3Airm7
 github.com/Microsoft/hcsshim v0.11.4/go.mod h1:smjE4dvqPX9Zldna+t5FG3rnoHhaB7QYxPRqGcpAD9w=
 github.com/ZMS-DevOps/booking-service v1.0.12 h1:GyLhCi4tozPYmij/RJL0gIuhNVS/cCtm/xuV9m8fp60=
 github.com/ZMS-DevOps/booking-service v1.0.12/go.mod h1:xCqLtgPXnk+uLgapClB054dUrGc2lhI5T18H8ov1rFI=
-github.com/ZMS-DevOps/search-service v1.0.2 h1:ymPqZ32wRk2NpgTfCVwcTqXk283OOZ2v2JAxSE0vTYI=
-github.com/ZMS-DevOps/search-service v1.0.2/go.mod h1:gfgcz3ix1y7osLxM92r+RCd00+vssGB6EPLZyItTuxk=
+github.com/ZMS-DevOps/search-service v1.0.4 h1:FelQrrzcGGy57lh7PUFf/HztsDrjXWHiIHhWuJBVNL4=
+github.com/ZMS-DevOps/search-service v1.0.4/go.mod h1:jIiZPLAOa4Cc6+RhnZEvWoR8olgI/sj1aGJ/Pk9YELA=
 github.com/aws/aws-sdk-go-v2 v1.17.6 h1:Y773UK7OBqhzi5VDXMi1zVGsoj+CVHs2eaC2bDsLwi0=
 github.com/aws/aws-sdk-go-v2 v1.17.6/go.mod h1:uzbQtefpm44goOPmdKyAlXSNcwlRgF3ePWVW6EtJvvw=
 github.com/aws/aws-sdk-go-v2/config v1.18.16 h1:4r7gsCu8Ekwl5iJGE/GmspA2UifqySCCkyyyPFeWs3w=

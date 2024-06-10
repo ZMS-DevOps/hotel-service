@@ -13,5 +13,8 @@ COPY --from=builder /build/main .
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN chown appuser:appgroup /app/main && chmod 555 /app/main
 
+RUN mkdir -p /app/uploads
+RUN chown -R appuser:appgroup /app/uploads && chmod -R 0777 /app/uploads
+
 USER appuser
 ENTRYPOINT ["/app/main"]

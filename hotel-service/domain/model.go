@@ -7,7 +7,7 @@ import (
 
 type Accommodation struct {
 	Id                                    primitive.ObjectID `bson:"_id"`
-	HostId                                primitive.ObjectID `bson:"host_id"`
+	HostId                                string             `bson:"host_id"`
 	Name                                  string             `bson:"name"`
 	Location                              string             `bson:"location"`
 	Benefits                              []string           `bson:"benefits"`
