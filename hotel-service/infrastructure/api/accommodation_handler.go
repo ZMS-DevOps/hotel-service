@@ -210,41 +210,25 @@ func (handler *AccommodationHandler) Add(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	var createAccommodationDto dto.AccommodationDto
-	fmt.Println("CAO majstore")
 	jsonData := r.FormValue("json")
-	fmt.Println("CAO majstore2")
 	if err := json.Unmarshal([]byte(jsonData), &createAccommodationDto); err != nil {
-		fmt.Println("CAO majstore4")
-		fmt.Println("CAO majstore4")
 		handleError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	fmt.Println("CAO majstore3")
-
-	fmt.Println("CAO majstore5")
 
 	if err := dto.ValidateAccommodationDto(&createAccommodationDto); err != nil {
 		handleError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	//if err := json.NewDecoder(r.Body).Decode(&createAccommodationDto); err != nil {
-	//	handleError(w, http.StatusBadRequest, "Invalid request payload")
-	//	return
-	//}
 
 	photos, err := handlePhotoUploads(r, w, createAccommodationDto.HostId)
-	fmt.Println(photos)
-	fmt.Println(err)
 	if err != nil {
 		handleError(w, http.StatusBadRequest, "Failed to upload photos")
 		return
 	}
 
-	fmt.Println("CAO majstore6")
-
 	newAccommodation := dto.MapAccommodation(&createAccommodationDto)
 	newAccommodation.Photos = photos
-	fmt.Println("CAO majstore7")
 
 	if err := handler.service.Add(newAccommodation); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -257,7 +241,6 @@ func (handler *AccommodationHandler) Add(w http.ResponseWriter, r *http.Request)
 func handlePhotoUploads(r *http.Request, w http.ResponseWriter, hostId string) ([]string, error) {
 	var photos []string
 	for _, fileHeader := range r.MultipartForm.File["photos"] {
-		fmt.Println("Stigao sam")
 		file, err := fileHeader.Open()
 		if err != nil {
 			handleError(w, http.StatusInternalServerError, "Failed to open file")
@@ -265,13 +248,6 @@ func handlePhotoUploads(r *http.Request, w http.ResponseWriter, hostId string) (
 		}
 		defer file.Close()
 
-		path, err := os.Getwd()
-		if err != nil {
-			log.Println(err)
-		}
-		fmt.Println(path)
-
-		fmt.Println(fileHeader.Filename)
 		uploadDir := "./uploads"
 		if err := os.MkdirAll(uploadDir, 0777); err != nil {
 			fmt.Println("Error creating directory:", err)

@@ -2,7 +2,6 @@ package dto
 
 import (
 	"encoding/base64"
-	"fmt"
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	search "github.com/ZMS-DevOps/search-service/proto"
 	"io/ioutil"
@@ -130,11 +129,9 @@ func encodeFileToBase64(filePath string) (string, error) {
 }
 
 func MapAccommodationResponse(accommodation domain.Accommodation) *AccommodationResponse {
-	fmt.Println(accommodation)
 	base64Photos := make([]string, 0, len(accommodation.Photos))
 	for _, photoPath := range accommodation.Photos {
 		base64Photo, err := encodeFileToBase64(photoPath)
-		fmt.Println(err)
 		if err != nil {
 			continue
 		}
