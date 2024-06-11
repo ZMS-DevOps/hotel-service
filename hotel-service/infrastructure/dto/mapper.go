@@ -1,8 +1,10 @@
 package dto
 
 import (
+	"encoding/base64"
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	search "github.com/ZMS-DevOps/search-service/proto"
+	"io/ioutil"
 	"time"
 )
 
@@ -62,16 +64,21 @@ func MapPricingType(typeOfPayment *string) *domain.PricingType {
 }
 
 func MapToSearchAccommodation(accommodation *domain.Accommodation) *search.Accommodation {
+	var mainPhoto = ""
+	if (accommodation.Photos != nil) && (len(accommodation.Photos) != 0) {
+		mainPhoto = accommodation.Photos[0]
+	}
 	return &search.Accommodation{
 		AccommodationId: accommodation.Id.Hex(),
 		Name:            accommodation.Name,
 		Location:        accommodation.Location,
-		MainPhoto:       accommodation.Photos[0],
+		MainPhoto:       mainPhoto,
 		MinGuestNumber:  int32(accommodation.GuestNumber.Min),
 		MaxGuestNumber:  int32(accommodation.GuestNumber.Max),
 		DefaultPrice:    accommodation.DefaultPrice.Price,
 		PriceType:       accommodation.DefaultPrice.Type.String(),
 		SpecialPrice:    mapSearchSpecialPrice(accommodation.SpecialPrice),
+		HostId:          accommodation.HostId,
 	}
 }
 
@@ -113,17 +120,34 @@ func toSpecialPriceDto(specialPrice []domain.SpecialPrice) []SpecialPriceDto {
 	return result
 }
 
+func encodeFileToBase64(filePath string) (string, error) {
+	fileBytes, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(fileBytes), nil
+}
+
 func MapAccommodationResponse(accommodation domain.Accommodation) *AccommodationResponse {
+	base64Photos := make([]string, 0, len(accommodation.Photos))
+	for _, photoPath := range accommodation.Photos {
+		base64Photo, err := encodeFileToBase64(photoPath)
+		if err != nil {
+			continue
+		}
+		base64Photos = append(base64Photos, base64Photo)
+	}
+
 	return &AccommodationResponse{
 		Id:                                    accommodation.Id.Hex(),
 		Name:                                  accommodation.Name,
 		Location:                              accommodation.Location,
 		Benefits:                              accommodation.Benefits,
-		Photos:                                accommodation.Photos,
+		Photos:                                base64Photos,
 		GuestNumber:                           mapGuestNumber(&accommodation.GuestNumber),
 		DefaultPrice:                          mapDefaultPrice(&accommodation.DefaultPrice),
 		SpecialPrice:                          toSpecialPriceDto(accommodation.SpecialPrice),
-		HostId:                                accommodation.HostId.Hex(),
+		HostId:                                accommodation.HostId,
 		ReviewReservationRequestAutomatically: accommodation.ReviewReservationRequestAutomatically,
 	}
 }

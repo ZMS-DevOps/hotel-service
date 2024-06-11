@@ -7,7 +7,7 @@ import (
 type AccommodationStore interface {
 	Get(id primitive.ObjectID) (*Accommodation, error)
 	GetAll() ([]*Accommodation, error)
-	GetByHostId(ownerId primitive.ObjectID) ([]*Accommodation, error)
+	GetByHostId(ownerId string) ([]*Accommodation, error)
 	Insert(accommodation *Accommodation) error
 	InsertWithId(accommodation *Accommodation) error
 	DeleteAll()
@@ -17,5 +17,5 @@ type AccommodationStore interface {
 	UpdateSpecialPrice(id primitive.ObjectID, newSpecialPrices []SpecialPrice) error
 	UpdateTypeOfPayment(id primitive.ObjectID, typeOfPayment *string) error
 	GetSpecialPrices(id primitive.ObjectID) ([]SpecialPrice, error)
-	DeleteByHostId(hostId primitive.ObjectID) error
+	DeleteByHostId(hostId string) error
 }
