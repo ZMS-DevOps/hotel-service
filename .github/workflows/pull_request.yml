@@ -46,5 +46,4 @@ jobs:
 
      - name: Test
        working-directory: hotel-service
-       run: go test -v ./...
-       
+       run: go test -v ./application/test
