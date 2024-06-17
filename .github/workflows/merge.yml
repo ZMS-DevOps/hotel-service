@@ -46,6 +46,10 @@ jobs:
       - name: Build
         working-directory: hotel-service
         run: go build -v ./...
+
+      - name: Test
+        working-directory: hotel-service
+        run: go test -v ./application/test
   
   sonar-cloud:
     needs: build
