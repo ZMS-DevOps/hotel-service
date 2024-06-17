@@ -134,13 +134,11 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 
 func (service *AccommodationService) GetImages(accommodationIds []dto.GetImagesRequest) ([]dto.ImageResponse, error) {
 	var images []dto.ImageResponse
-	log.Printf("stigao ")
 	for _, accommodationId := range accommodationIds {
 		id, err := primitive.ObjectIDFromHex(accommodationId.Id)
 		if err != nil {
 			return nil, err
 		}
-		log.Printf("stigao with id %v", id)
 		accommodation, err := service.Get(id)
 		if err != nil {
 			return nil, err
@@ -150,7 +148,6 @@ func (service *AccommodationService) GetImages(accommodationIds []dto.GetImagesR
 			return nil, err
 		}
 		images = append(images, dto.ImageResponse{Id: id, Images: encodedImaged})
-		log.Printf("stigao with id 3", id)
 	}
 	return images, nil
 }
