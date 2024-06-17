@@ -39,6 +39,7 @@ func (handler *AccommodationHandler) Init(router *mux.Router) {
 	router.HandleFunc("/accommodation/{id}", handler.Delete).Methods("DELETE")
 	router.HandleFunc("/accommodation/price/{id}", handler.UpdatePrice).Methods("PUT")
 	router.HandleFunc("/accommodation/health", handler.GetHealthCheck).Methods("GET")
+	router.HandleFunc("/accommodation/images", handler.GetImagesForAccommodations).Methods("POST")
 }
 
 func (handler *AccommodationHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -49,17 +50,32 @@ func (handler *AccommodationHandler) Update(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	var updatedAccommodationDto dto.AccommodationDto
-	if err := json.NewDecoder(r.Body).Decode(&updatedAccommodationDto); err != nil {
-		handleError(w, http.StatusBadRequest, "Invalid request payload")
+	err = r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		handleError(w, http.StatusBadRequest, "Failed to parse form data")
 		return
 	}
-
-	if err := dto.ValidateAccommodationDto(&updatedAccommodationDto); err != nil {
+	var createAccommodationDto dto.AccommodationDto
+	jsonData := r.FormValue("json")
+	if err := json.Unmarshal([]byte(jsonData), &createAccommodationDto); err != nil {
 		handleError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	updatedAccommodation := dto.MapAccommodation(&updatedAccommodationDto)
+
+	if err := dto.ValidateAccommodationDto(&createAccommodationDto); err != nil {
+		handleError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	photos, err := handlePhotoUploads(r, w, createAccommodationDto.HostId)
+	if err != nil {
+		handleError(w, http.StatusBadRequest, "Failed to upload photos")
+		return
+	}
+
+	updatedAccommodation := dto.MapAccommodation(&createAccommodationDto)
+	updatedAccommodation.Photos = photos
+
 	updatedAccommodation.Id = accommodationId
 
 	if err := handler.service.Update(accommodationId, updatedAccommodation); err != nil {
@@ -107,7 +123,12 @@ func (handler *AccommodationHandler) Delete(w http.ResponseWriter, r *http.Reque
 	}
 
 	if err := handler.service.Delete(accommodationId); err != nil {
-		handleError(w, http.StatusInternalServerError, "Failed to delete accommodation")
+		if err.Error() == "accommodation could not be deleted" {
+			handleError(w, http.StatusPreconditionFailed, "accommodation could not be deleted")
+		} else {
+			handleError(w, http.StatusInternalServerError, "Failed to delete accommodation")
+		}
+
 		return
 	}
 
@@ -194,6 +215,28 @@ func (handler *AccommodationHandler) GetAll(w http.ResponseWriter, r *http.Reque
 	}
 
 	jsonResponse, err := json.Marshal(responses)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResponse)
+}
+
+func (handler *AccommodationHandler) GetImagesForAccommodations(w http.ResponseWriter, r *http.Request) {
+	var accommodationIds []dto.GetImagesRequest
+	if err := json.NewDecoder(r.Body).Decode(&accommodationIds); err != nil {
+		handleError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+
+	images, err := handler.service.GetImages(accommodationIds)
+	if err != nil {
+		handleError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	jsonResponse, err := json.Marshal(images)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

@@ -8,15 +8,25 @@ spec:
     matchLabels:
        app: hotel
   rules:
-#    {}
     - to:
         - operation:
-            methods: [ "GET", "PUT", "POST", "DELETE" ]
-            paths: [ "/accommodation/health", "/accommodation*", "/accommodation/**", "/accommodation/price/*", "/accommodation/price/**" ]
-#      from:
-#        - source:
-#            requestPrincipals: [ "*" ]
-#      when:
-#        - key: request.auth.claims[realm_access][roles]
-#          values: [ "guest", "host" ]
-
+            methods: [ "GET" ]
+            paths: [ "/accommodation/health", "/accommodation" ]
+    - to:
+        - operation:
+            methods: [ "POST" ]
+            paths: [ "/accommodation/images" ]
+    - to:
+        - operation:
+            methods: [ "POST", "PUT", "DELETE" ]
+            paths: [ "/accommodation", "/accommodation/*" ]
+      when:
+        - key: request.auth.claims[realm_access][roles]
+          values: [ "host" ]
+    - to:
+        - operation:
+            methods: [ "GET" ]
+            paths: [ "/accommodation/*" ]
+      when:
+        - key: request.auth.claims[realm_access][roles]
+          values: [ "host", "guest" ]

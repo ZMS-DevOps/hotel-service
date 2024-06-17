@@ -5,7 +5,7 @@ go 1.22
 //replace github.com/ZMS-DevOps/search-service => ../../search-service/search-service
 
 require (
-	github.com/ZMS-DevOps/booking-service v1.0.12
+	github.com/ZMS-DevOps/booking-service v1.0.13
 	github.com/ZMS-DevOps/search-service v1.0.4
 	github.com/confluentinc/confluent-kafka-go/v2 v2.4.0
 	github.com/go-playground/validator/v10 v10.20.0

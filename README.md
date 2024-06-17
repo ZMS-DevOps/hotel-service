@@ -122,6 +122,6 @@ docker push devopszms2024/zms-devops-hotel-service
 kubectl -n backend replace --force -f k8s
 kubectl -n backend replace --force -f istio
 
-docker build -t devopszms2024/zms-devops-hotel-service:3.20.5 .
-docker push devopszms2024/zms-devops-hotel-service:3.20.5
+docker build -t devopszms2024/dev-zms-devops-hotel-service:3.20.5 .
+docker push devopszms2024/dev-zms-devops-hotel-service:3.20.5
 kubectl -n backend replace --force -f ../k8s

@@ -1,12 +1,15 @@
 package application
 
 import (
+	"encoding/base64"
+	"errors"
 	booking "github.com/ZMS-DevOps/booking-service/proto"
 	"github.com/ZMS-DevOps/hotel-service/application/external"
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/dto"
 	search "github.com/ZMS-DevOps/search-service/proto"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"io/ioutil"
 	"log"
 )
 
@@ -68,15 +71,28 @@ func (service *AccommodationService) Update(id primitive.ObjectID, accommodation
 }
 
 func (service *AccommodationService) Delete(id primitive.ObjectID) error {
-	_, err := service.store.Get(id)
+	canDelete, err := external.CheckAccommodationHasReservation(service.bookingClient, id)
 	if err != nil {
 		return err
 	}
-	err = service.store.Delete(id)
-	if err != nil {
+	if canDelete.Success {
+		return service.deleteAccommodation(id)
+	}
+	return errors.New("accommodation could not be deleted")
+}
+
+func (service *AccommodationService) deleteAccommodation(id primitive.ObjectID) error {
+	if err := service.store.Delete(id); err != nil {
 		return err
 	}
-	_, err = external.DeleteSearchAccommodation(service.searchClient, id)
+	if err := service.notifySearchServiceWhenDeletingAccommodation(id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (service *AccommodationService) notifySearchServiceWhenDeletingAccommodation(id primitive.ObjectID) error {
+	_, err := external.DeleteSearchAccommodation(service.searchClient, id)
 	if err != nil {
 		return err
 	}
@@ -116,14 +132,58 @@ func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePr
 	return nil
 }
 
+func (service *AccommodationService) GetImages(accommodationIds []dto.GetImagesRequest) ([]dto.ImageResponse, error) {
+	var images []dto.ImageResponse
+	for _, accommodationId := range accommodationIds {
+		id, err := primitive.ObjectIDFromHex(accommodationId.Id)
+		if err != nil {
+			return nil, err
+		}
+		accommodation, err := service.Get(id)
+		if err != nil {
+			return nil, err
+		}
+		encodedImaged, err := service.base64Encode(accommodation.Photos)
+		if err != nil {
+			return nil, err
+		}
+		images = append(images, dto.ImageResponse{Id: id, Images: encodedImaged})
+	}
+	return images, nil
+}
+
+func (service *AccommodationService) base64Encode(photos []string) ([]string, error) {
+	var base64Photos []string
+	for _, photoPath := range photos {
+		base64Photo, err := encodeFileToBase64(photoPath)
+		if err != nil {
+			continue
+		}
+		base64Photos = append(base64Photos, base64Photo)
+	}
+
+	return base64Photos, nil
+}
+
+func encodeFileToBase64(filePath string) (string, error) {
+	fileBytes, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(fileBytes), nil
+}
+
 func (service *AccommodationService) OnDeleteAccommodations(hostId string) {
-	accomodations, err := service.store.GetByHostId(hostId)
+	accommodations, err := service.store.GetByHostId(hostId)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	for _, accom := range accomodations {
-		service.Delete(accom.Id)
+	for _, accom := range accommodations {
+		if err := service.deleteAccommodation(accom.Id); err != nil {
+			log.Println(err)
+			return
+		}
 	}
 }
 

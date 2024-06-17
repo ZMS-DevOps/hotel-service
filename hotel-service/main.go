@@ -33,7 +33,6 @@ func main() {
 		for {
 			msg, err := consumer.ReadMessage(-1)
 			if err != nil {
-				log.Printf("Error reading message: %v", err)
 				continue
 			}
 			if msg == nil {
