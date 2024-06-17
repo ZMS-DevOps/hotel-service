@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hotel
+  template:
+    metadata:
+      labels:
+        app: hotel
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: hotel
+          image: devopszms2024/zms-devops-hotel-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8084
+          envFrom:
+            - secretRef:
+                name: mongodb-hotel-secret
+            - configMapRef:
+                name: hotel-configmap
+            - configMapRef:
+                name: mongodb-hotel-configmap
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "my-kafka.backend.svc.cluster.local:9092"
+            - name: KAFKA_AUTH_PASSWORD
+              value: "bMNfTWUSS3"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel
+  namespace: backend
+spec:
+  selector:
+    app: hotel
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8084
+      targetPort: 8084
+    - protocol: TCP
+      name: grpc
+      port: 8001
+      targetPort: 8001

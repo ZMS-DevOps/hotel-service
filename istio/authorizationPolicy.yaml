@@ -1,0 +1,32 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  namespace: backend
+  name: hotel
+spec:	
+  selector:
+    matchLabels:
+       app: hotel
+  rules:
+    - to:
+        - operation:
+            methods: [ "GET" ]
+            paths: [ "/accommodation/health", "/accommodation" ]
+    - to:
+        - operation:
+            methods: [ "POST" ]
+            paths: [ "/accommodation/images" ]
+    - to:
+        - operation:
+            methods: [ "POST", "PUT", "DELETE" ]
+            paths: [ "/accommodation", "/accommodation/*" ]
+      when:
+        - key: request.auth.claims[realm_access][roles]
+          values: [ "host" ]
+    - to:
+        - operation:
+            methods: [ "GET" ]
+            paths: [ "/accommodation/*" ]
+      when:
+        - key: request.auth.claims[realm_access][roles]
+          values: [ "host", "guest" ]
