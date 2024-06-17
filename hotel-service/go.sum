@@ -12,8 +12,8 @@ github.com/Microsoft/go-winio v0.6.1 h1:9/kr64B9VUZrLm5YYwbGtUJnMgqWVOdUAXu6Migc
 github.com/Microsoft/go-winio v0.6.1/go.mod h1:LRdKpFKfdobln8UmuiYcKPot9D2v6svN5+sAH+4kjUM=
 github.com/Microsoft/hcsshim v0.11.4 h1:68vKo2VN8DE9AdN4tnkWnmdhqdbpUFM8OF3Airm7fz8=
 github.com/Microsoft/hcsshim v0.11.4/go.mod h1:smjE4dvqPX9Zldna+t5FG3rnoHhaB7QYxPRqGcpAD9w=
-github.com/ZMS-DevOps/booking-service v1.0.12 h1:GyLhCi4tozPYmij/RJL0gIuhNVS/cCtm/xuV9m8fp60=
-github.com/ZMS-DevOps/booking-service v1.0.12/go.mod h1:xCqLtgPXnk+uLgapClB054dUrGc2lhI5T18H8ov1rFI=
+github.com/ZMS-DevOps/booking-service v1.0.13 h1:tH4rL1sgYLbJEaLFDm4GEVDVZuiTu3Sp9MdHFOf+Qhg=
+github.com/ZMS-DevOps/booking-service v1.0.13/go.mod h1:xCqLtgPXnk+uLgapClB054dUrGc2lhI5T18H8ov1rFI=
 github.com/ZMS-DevOps/search-service v1.0.4 h1:FelQrrzcGGy57lh7PUFf/HztsDrjXWHiIHhWuJBVNL4=
 github.com/ZMS-DevOps/search-service v1.0.4/go.mod h1:jIiZPLAOa4Cc6+RhnZEvWoR8olgI/sj1aGJ/Pk9YELA=
 github.com/aws/aws-sdk-go-v2 v1.17.6 h1:Y773UK7OBqhzi5VDXMi1zVGsoj+CVHs2eaC2bDsLwi0=

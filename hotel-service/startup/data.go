@@ -60,7 +60,7 @@ var accommodations = []*domain.Accommodation{
 		ReviewReservationRequestAutomatically: true,
 	},
 	{
-		Id:       getObjectId("gg43bdc7240f80f13b5d24e9"),
+		Id:       getObjectId("1143bdc7240f80f13b5d24e9"),
 		Name:     "Balinese Bungalow",
 		Location: "Bali",
 		HostId:   "57325353-5469-4930-8ec9-35c003e1b967",
@@ -78,7 +78,7 @@ var accommodations = []*domain.Accommodation{
 		ReviewReservationRequestAutomatically: true,
 	},
 	{
-		Id:       getObjectId("hh43bdc7240f80f13b5d25e0"),
+		Id:       getObjectId("2243bdc7240f80f13b5d25e0"),
 		Name:     "Cliffside Retreat",
 		Location: "Bali",
 		HostId:   "04d19820-6340-4c93-84f9-2ffda959a0d9",
@@ -96,7 +96,7 @@ var accommodations = []*domain.Accommodation{
 		ReviewReservationRequestAutomatically: false,
 	},
 	{
-		Id:       getObjectId("ii43bdc7240f80f13b5d26e1"),
+		Id:       getObjectId("3343bdc7240f80f13b5d26e1"),
 		Name:     "Ubud Villa",
 		Location: "Bali",
 		HostId:   "04d19820-6340-4c93-84f9-2ffda959a0d9",
@@ -149,7 +149,7 @@ var accommodations = []*domain.Accommodation{
 		ReviewReservationRequestAutomatically: true,
 	},
 	{
-		Id:       getObjectId("jj43bdc7240f80f13b5d27e2"),
+		Id:       getObjectId("4443bdc7240f80f13b5d27e2"),
 		Name:     "Central Park Apartment",
 		Location: "New York",
 		HostId:   "04d19820-6340-4c93-84f9-2ffda959a0d9",
@@ -166,7 +166,7 @@ var accommodations = []*domain.Accommodation{
 		ReviewReservationRequestAutomatically: false,
 	},
 	{
-		Id:       getObjectId("kk43bdc7240f80f13b5d28e3"),
+		Id:       getObjectId("5543bdc7240f80f13b5d28e3"),
 		Name:     "Brooklyn Brownstone",
 		Location: "New York",
 		HostId:   "04d19820-6340-4c93-84f9-2ffda959a0d9",
@@ -183,7 +183,7 @@ var accommodations = []*domain.Accommodation{
 		ReviewReservationRequestAutomatically: true,
 	},
 	{
-		Id:       getObjectId("ll43bdc7240f80f13b5d29e4"),
+		Id:       getObjectId("6643bdc7240f80f13b5d29e4"),
 		Name:     "Times Square Studio",
 		Location: "New York",
 		HostId:   "04d19820-6340-4c93-84f9-2ffda959a0d9",

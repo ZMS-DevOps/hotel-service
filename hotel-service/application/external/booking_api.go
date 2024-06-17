@@ -42,3 +42,11 @@ func UpdateBookingUnavailability(bookingClient booking.BookingServiceClient, id 
 			AccommodationName: name,
 		})
 }
+
+func CheckAccommodationHasReservation(bookingClient booking.BookingServiceClient, accommodationId primitive.ObjectID) (*booking.CheckAccommodationHasReservationResponse, error) {
+	return bookingClient.CheckAccommodationHasReservation(
+		context.TODO(),
+		&booking.CheckAccommodationHasReservationRequest{
+			AccommodationId: accommodationId.Hex(),
+		})
+}
