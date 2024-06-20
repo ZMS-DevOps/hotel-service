@@ -2,11 +2,15 @@ package application
 
 import (
 	"context"
+	"fmt"
 	booking "github.com/ZMS-DevOps/booking-service/proto"
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	search "github.com/ZMS-DevOps/search-service/proto"
 	"github.com/stretchr/testify/mock"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc"
 )
 
@@ -140,4 +144,76 @@ func (m *MockSearchServiceClient) EditAccommodation(ctx context.Context, in *sea
 func (m *MockSearchServiceClient) DeleteAccommodation(ctx context.Context, in *search.DeleteAccommodationRequest, opts ...grpc.CallOption) (*search.DeleteAccommodationResponse, error) {
 	args := m.Called(ctx, in, opts)
 	return args.Get(0).(*search.DeleteAccommodationResponse), args.Error(1)
+}
+
+type LokiMock struct {
+	mock.Mock
+}
+
+func (l *LokiMock) Debugf(format string, args ...interface{}) {
+	l.Called(append([]interface{}{format}, args...)...)
+	fmt.Printf("Debugf called with format: %s and args: %v\n", format, args)
+}
+
+func (l *LokiMock) Infof(format string, args ...interface{}) {
+	l.Called(append([]interface{}{format}, args...)...)
+	fmt.Printf("Infof called with format: %s and args: %v\n", format, args)
+}
+
+func (l *LokiMock) Warnf(format string, args ...interface{}) {
+	l.Called(append([]interface{}{format}, args...)...)
+	fmt.Printf("Warnf called with format: %s and args: %v\n", format, args)
+}
+
+func (l *LokiMock) Errorf(format string, args ...interface{}) {
+	l.Called(append([]interface{}{format}, args...)...)
+	fmt.Printf("Errorf called with format: %s and args: %v\n", format, args)
+}
+
+func (l *LokiMock) Shutdown() {
+	l.Called()
+	fmt.Println("Shutdown called")
+}
+
+type SpanMock struct {
+	mock.Mock
+}
+
+func (s *SpanMock) End(options ...trace.SpanEndOption) {
+	s.Called(options)
+}
+
+func (s *SpanMock) AddEvent(name string, options ...trace.EventOption) {
+	s.Called(name, options)
+}
+
+func (s *SpanMock) IsRecording() bool {
+	args := s.Called()
+	return args.Bool(0)
+}
+
+func (s *SpanMock) RecordError(err error, options ...trace.EventOption) {
+	s.Called(err, options)
+}
+
+func (s *SpanMock) SpanContext() trace.SpanContext {
+	args := s.Called()
+	return args.Get(0).(trace.SpanContext)
+}
+
+func (s *SpanMock) SetStatus(code codes.Code, description string) {
+	s.Called(code, description)
+}
+
+func (s *SpanMock) SetName(name string) {
+	s.Called(name)
+}
+
+func (s *SpanMock) SetAttributes(kv ...attribute.KeyValue) {
+	s.Called(kv)
+}
+
+func (s *SpanMock) TracerProvider() trace.TracerProvider {
+	args := s.Called()
+	return args.Get(0).(trace.TracerProvider)
 }

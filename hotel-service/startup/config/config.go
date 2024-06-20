@@ -15,6 +15,8 @@ type Config struct {
 	SearchPort        string
 	BootstrapServers  string
 	KafkaAuthPassword string
+	JaegerHost        string
+	LokiHost          string
 }
 
 func NewConfig() *Config {
@@ -30,5 +32,7 @@ func NewConfig() *Config {
 		SearchPort:        os.Getenv("SEARCH_PORT"),
 		BootstrapServers:  os.Getenv("KAFKA_BOOTSTRAP_SERVERS"),
 		KafkaAuthPassword: os.Getenv("KAFKA_AUTH_PASSWORD"),
+		JaegerHost:        os.Getenv("JAEGER_ENDPOINT"),
+		LokiHost:          os.Getenv("LOKI_ENDPOINT"),
 	}
 }

@@ -6,12 +6,14 @@ import (
 	"github.com/ZMS-DevOps/hotel-service/application/external"
 	search "github.com/ZMS-DevOps/search-service/proto"
 	"github.com/gorilla/mux"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 
 	"github.com/ZMS-DevOps/hotel-service/application"
 	"github.com/ZMS-DevOps/hotel-service/domain"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/api"
 	"github.com/ZMS-DevOps/hotel-service/infrastructure/persistence"
 	"github.com/ZMS-DevOps/hotel-service/startup/config"
+	"github.com/afiskon/promtail-client/promtail"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"net/http"
@@ -21,12 +23,16 @@ type Server struct {
 	config               *config.Config
 	router               *mux.Router
 	AccommodationHandler *api.AccommodationHandler
+	traceProvider        *sdktrace.TracerProvider
+	loki                 promtail.Client
 }
 
-func NewServer(config *config.Config) *Server {
+func NewServer(config *config.Config, traceProvider *sdktrace.TracerProvider, loki promtail.Client) *Server {
 	server := &Server{
-		config: config,
-		router: mux.NewRouter(),
+		config:        config,
+		router:        mux.NewRouter(),
+		traceProvider: traceProvider,
+		loki:          loki,
 	}
 	server.AccommodationHandler = server.setupHandlers()
 	return server
@@ -73,9 +79,9 @@ func (server *Server) initAccommodationStore(client *mongo.Client) domain.Accomm
 }
 
 func (server *Server) initAccommodationService(store domain.AccommodationStore, bookingClient booking.BookingServiceClient, searchClient search.SearchServiceClient) *application.AccommodationService {
-	return application.NewAccommodationService(store, bookingClient, searchClient)
+	return application.NewAccommodationService(store, bookingClient, searchClient, server.loki)
 }
 
 func (server *Server) initAccommodationHandler(service *application.AccommodationService) *api.AccommodationHandler {
-	return api.NewAccommodationHandler(service)
+	return api.NewAccommodationHandler(service, server.traceProvider, server.loki)
 }
