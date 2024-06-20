@@ -25,16 +25,16 @@ func getSearchConnection(address string) (*grpc.ClientConn, error) {
 }
 
 func AddSearchAccommodation(searchClient search.SearchServiceClient, accommodation *search.Accommodation, span trace.Span, loki promtail.Client) (*search.AddAccommodationResponse, error) {
-	util.HttpTraceInfo("Adding accommodation in search service...", span, loki, "Add", "")
+	util.HttpTraceInfo("Adding accommodation in search service...", span, loki, "AddSearchAccommodation", "")
 	return searchClient.AddAccommodation(context.TODO(), &search.AddAccommodationRequest{Accommodation: accommodation})
 }
 
 func EditSearchAccommodation(searchClient search.SearchServiceClient, accommodation *search.Accommodation, span trace.Span, loki promtail.Client) (*search.EditAccommodationResponse, error) {
-	util.HttpTraceInfo("Edit accommodation in search service...", span, loki, "Add", "")
+	util.HttpTraceInfo("Edit accommodation in search service...", span, loki, "EditSearchAccommodation", "")
 	return searchClient.EditAccommodation(context.TODO(), &search.EditAccommodationRequest{Accommodation: accommodation})
 }
 
 func DeleteSearchAccommodation(searchClient search.SearchServiceClient, id primitive.ObjectID, span trace.Span, loki promtail.Client) (*search.DeleteAccommodationResponse, error) {
-	util.HttpTraceInfo("Delete accommodation in search service...", span, loki, "Add", "")
+	util.HttpTraceInfo("Delete accommodation in search service...", span, loki, "DeleteSearchAccommodation", "")
 	return searchClient.DeleteAccommodation(context.TODO(), &search.DeleteAccommodationRequest{AccommodationId: id.Hex()})
 }

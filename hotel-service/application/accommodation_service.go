@@ -33,17 +33,17 @@ func NewAccommodationService(store domain.AccommodationStore, bookingClient book
 }
 
 func (service *AccommodationService) Get(id primitive.ObjectID, span trace.Span, loki promtail.Client) (*domain.Accommodation, error) {
-	util.HttpTraceInfo("Fetching accommodation by id...", span, loki, "Add", "")
+	util.HttpTraceInfo("Fetching accommodation by id...", span, loki, "Get", "")
 	return service.store.Get(id)
 }
 
 func (service *AccommodationService) GetAll(span trace.Span, loki promtail.Client) ([]*domain.Accommodation, error) {
-	util.HttpTraceInfo("Fetching all accommodations...", span, loki, "Add", "")
+	util.HttpTraceInfo("Fetching all accommodations...", span, loki, "GetAll", "")
 	return service.store.GetAll()
 }
 
 func (service *AccommodationService) GetByHostId(ownerId string, span trace.Span, loki promtail.Client) ([]*domain.Accommodation, error) {
-	util.HttpTraceInfo("Fetching accommodations by host id...", span, loki, "Add", "")
+	util.HttpTraceInfo("Fetching accommodations by host id...", span, loki, "GetByHostId", "")
 	return service.store.GetByHostId(ownerId)
 }
 
@@ -66,7 +66,7 @@ func (service *AccommodationService) Add(accommodation *domain.Accommodation, sp
 }
 
 func (service *AccommodationService) Update(id primitive.ObjectID, accommodation *domain.Accommodation, span trace.Span, loki promtail.Client) error {
-	util.HttpTraceInfo("Fetching accommodation by id...", span, loki, "Add", "")
+	util.HttpTraceInfo("Fetching accommodation by id...", span, loki, "Update", "")
 	_, err := service.store.Get(id)
 	if err != nil {
 		util.HttpTraceError(err, "can't decode login payload", span, service.loki, "Login", "")
@@ -86,7 +86,7 @@ func (service *AccommodationService) Update(id primitive.ObjectID, accommodation
 }
 
 func (service *AccommodationService) Delete(id primitive.ObjectID, span trace.Span, loki promtail.Client) error {
-	util.HttpTraceInfo("Deleting accommodation...", span, loki, "Add", "")
+	util.HttpTraceInfo("Deleting accommodation...", span, loki, "Delete", "")
 	canDelete, err := external.CheckAccommodationHasReservation(service.bookingClient, id, span, loki)
 	if err != nil {
 		return err
@@ -98,7 +98,7 @@ func (service *AccommodationService) Delete(id primitive.ObjectID, span trace.Sp
 }
 
 func (service *AccommodationService) deleteAccommodation(id primitive.ObjectID, span trace.Span, loki promtail.Client) error {
-	util.HttpTraceInfo("Deleting accommodation from collection...", span, loki, "Add", "")
+	util.HttpTraceInfo("Deleting accommodation from collection...", span, loki, "DeleteAccommodation", "")
 	if err := service.store.Delete(id); err != nil {
 		return err
 	}
@@ -117,7 +117,7 @@ func (service *AccommodationService) notifySearchServiceWhenDeletingAccommodatio
 }
 
 func (service *AccommodationService) UpdatePrice(id primitive.ObjectID, updatePriceDto dto.UpdatePriceDto, span trace.Span, loki promtail.Client) error {
-	util.HttpTraceInfo("Fetching accommodation...", span, loki, "Add", "")
+	util.HttpTraceInfo("Fetching accommodation...", span, loki, "UpdatePrice", "")
 	_, err := service.store.Get(id)
 	if err != nil {
 		return err
@@ -161,7 +161,7 @@ func (service *AccommodationService) GetImages(accommodationIds []dto.GetImagesR
 		if err != nil {
 			return nil, err
 		}
-		util.HttpTraceInfo("Fetching accommodation...", span, loki, "Add", "")
+		util.HttpTraceInfo("Fetching accommodation...", span, loki, "GetImages", "")
 		accommodation, err := service.Get(id, span, loki)
 		if err != nil {
 			return nil, err
@@ -198,7 +198,7 @@ func encodeFileToBase64(filePath string) (string, error) {
 }
 
 func (service *AccommodationService) OnDeleteAccommodations(hostId string, span trace.Span, loki promtail.Client) {
-	util.HttpTraceInfo("Fetching accommodation by host id...", span, loki, "Add", "")
+	util.HttpTraceInfo("Fetching accommodation by host id...", span, loki, "OnDeleteAccommodations", "")
 	accommodations, err := service.store.GetByHostId(hostId)
 	if err != nil {
 		log.Println(err)
@@ -213,7 +213,7 @@ func (service *AccommodationService) OnDeleteAccommodations(hostId string, span 
 }
 
 func updateSpecialPrice(id primitive.ObjectID, updatePriceDto dto.UpdatePriceDto, service *AccommodationService, span trace.Span, loki promtail.Client) error {
-	util.HttpTraceInfo("Fetching special prices by accommodation id...", span, loki, "Add", "")
+	util.HttpTraceInfo("Fetching special prices by accommodation id...", span, loki, "GetSpecialPrices", "")
 	currentSpecialPrices, err := service.store.GetSpecialPrices(id)
 	if err != nil {
 		return err
@@ -228,7 +228,7 @@ func updateSpecialPrice(id primitive.ObjectID, updatePriceDto dto.UpdatePriceDto
 	}
 
 	newSpecialPrices := AddSpecialPrice(currentSpecialPrices, newSpecialPrice)
-	util.HttpTraceInfo("Updating special prices...", span, loki, "Add", "")
+	util.HttpTraceInfo("Updating special prices...", span, loki, "UpdateSpecialPrice", "")
 	if err := service.store.UpdateSpecialPrice(id, newSpecialPrices); err != nil {
 		return err
 	}

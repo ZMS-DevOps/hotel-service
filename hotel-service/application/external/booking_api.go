@@ -25,7 +25,7 @@ func getConnection(address string) (*grpc.ClientConn, error) {
 }
 
 func CreateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId string, name string, span trace.Span, loki promtail.Client) (*booking.AddUnavailabilityResponse, error) {
-	util.HttpTraceInfo("Adding unavailability in booking service...", span, loki, "Add", "")
+	util.HttpTraceInfo("Adding unavailability in booking service...", span, loki, "CreateBookingUnavailability", "")
 	return bookingClient.AddUnavailability(
 		context.TODO(),
 		&booking.AddUnavailabilityRequest{
@@ -37,7 +37,7 @@ func CreateBookingUnavailability(bookingClient booking.BookingServiceClient, id 
 }
 
 func UpdateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId string, name string, span trace.Span, loki promtail.Client) (*booking.EditAccommodationResponse, error) {
-	util.HttpTraceInfo("Update unavailability in booking service...", span, loki, "Add", "")
+	util.HttpTraceInfo("Update unavailability in booking service...", span, loki, "UpdateBookingUnavailability", "")
 	return bookingClient.EditAccommodation(
 		context.TODO(),
 		&booking.EditAccommodationRequest{
@@ -49,7 +49,7 @@ func UpdateBookingUnavailability(bookingClient booking.BookingServiceClient, id 
 }
 
 func CheckAccommodationHasReservation(bookingClient booking.BookingServiceClient, accommodationId primitive.ObjectID, span trace.Span, loki promtail.Client) (*booking.CheckAccommodationHasReservationResponse, error) {
-	util.HttpTraceInfo("Check if accommodation has reservation in booking service...", span, loki, "Add", "")
+	util.HttpTraceInfo("Check if accommodation has reservation in booking service...", span, loki, "CheckAccommodationHasReservation", "")
 	return bookingClient.CheckAccommodationHasReservation(
 		context.TODO(),
 		&booking.CheckAccommodationHasReservationRequest{
