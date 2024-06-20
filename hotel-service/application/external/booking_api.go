@@ -3,7 +3,10 @@ package external
 import (
 	"context"
 	booking "github.com/ZMS-DevOps/booking-service/proto"
+	"github.com/ZMS-DevOps/hotel-service/util"
+	"github.com/afiskon/promtail-client/promtail"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -21,7 +24,8 @@ func getConnection(address string) (*grpc.ClientConn, error) {
 	return grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 }
 
-func CreateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId string, name string) (*booking.AddUnavailabilityResponse, error) {
+func CreateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId string, name string, span trace.Span, loki promtail.Client) (*booking.AddUnavailabilityResponse, error) {
+	util.HttpTraceInfo("Adding unavailability in booking service...", span, loki, "Add", "")
 	return bookingClient.AddUnavailability(
 		context.TODO(),
 		&booking.AddUnavailabilityRequest{
@@ -32,7 +36,8 @@ func CreateBookingUnavailability(bookingClient booking.BookingServiceClient, id 
 		})
 }
 
-func UpdateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId string, name string) (*booking.EditAccommodationResponse, error) {
+func UpdateBookingUnavailability(bookingClient booking.BookingServiceClient, id primitive.ObjectID, reviewReservationRequestAutomatically bool, hostId string, name string, span trace.Span, loki promtail.Client) (*booking.EditAccommodationResponse, error) {
+	util.HttpTraceInfo("Update unavailability in booking service...", span, loki, "Add", "")
 	return bookingClient.EditAccommodation(
 		context.TODO(),
 		&booking.EditAccommodationRequest{
@@ -43,7 +48,8 @@ func UpdateBookingUnavailability(bookingClient booking.BookingServiceClient, id 
 		})
 }
 
-func CheckAccommodationHasReservation(bookingClient booking.BookingServiceClient, accommodationId primitive.ObjectID) (*booking.CheckAccommodationHasReservationResponse, error) {
+func CheckAccommodationHasReservation(bookingClient booking.BookingServiceClient, accommodationId primitive.ObjectID, span trace.Span, loki promtail.Client) (*booking.CheckAccommodationHasReservationResponse, error) {
+	util.HttpTraceInfo("Check if accommodation has reservation in booking service...", span, loki, "Add", "")
 	return bookingClient.CheckAccommodationHasReservation(
 		context.TODO(),
 		&booking.CheckAccommodationHasReservationRequest{

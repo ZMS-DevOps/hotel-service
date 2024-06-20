@@ -9,3 +9,5 @@ data:
   BOOKING_PORT: "8001"
   SEARCH_HOST: "search"
   SEARCH_PORT: "8002"
+  JAEGER_ENDPOINT: "http://jaeger-collector.istio-system.svc.cluster.local:14268/api/traces"
+  LOKI_ENDPOINT: "http://loki.istio-system.svc.cluster.local:3100/api/prom/push"
